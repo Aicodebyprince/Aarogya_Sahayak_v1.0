@@ -1,0 +1,58 @@
+services:
+  # Aarogya Sahayak - Backend API (FastAPI)
+  - type: web
+    name: aarogya-sahayak-backend
+    runtime: python
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "alembic upgrade head && python -m app.schemes.import_kb --apply && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: ENVIRONMENT
+        value: staging
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aarogya-sahayak-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # ---- DEMO DEPLOYMENT (zero credentials needed) ----
+      # Login uses controlled demo OTP: any Indian mobile number + 123456
+      # To switch to real SMS later: set OTP_MODE=MSG91 and add
+      # MSG91_AUTH_KEY / MSG91_TEMPLATE_ID via the Render dashboard.
+      - key: INTEGRATION_MODE
+        value: mock
+      - key: OTP_MODE
+        value: MOCK
+      - key: DEMO_OTP_CODE
+        value: "123456"
+      - key: GEMINI_MODE
+        value: mock
+      - key: SARVAM_MODE
+        value: mock
+      - key: TAVILY_MODE
+        value: mock
+      - key: NEO4J_MODE
+        value: mock
+      - key: MILVUS_MODE
+        value: mock
+      - key: N8N_MODE
+        value: mock
+      - key: ABDM_MODE
+        value: mock
+      # Optional live keys (add later via dashboard when needed)
+
+databases:
+  # Managed PostgreSQL 16 in Singapore (Free Tier)
+  - name: aarogya-sahayak-db
+    region: singapore
+    plan: free
+    postgresMajorVersion: "16"
+    databaseName: aarogya_db
+    user: aarogya_user
