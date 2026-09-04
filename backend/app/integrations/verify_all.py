@@ -14,6 +14,7 @@ from app.ai.providers.n8n_service import n8n_service
 from app.ai.providers.abdm_service import abdm_service
 from app.ai.providers.litert_service import litert_service
 from app.integrations.swytchcode import swytchcode_adapter
+from app.integrations.lyzr import lyzr_adapter
 
 def verify_all_integrations():
     print("======================================================================")
@@ -44,11 +45,11 @@ def verify_all_integrations():
             "notes": "Pydantic structured output contracts active; local safety critic guardrail enforced"
         },
         {
-            "service": "Lyzr Multi-Agent Orchestrator",
-            "mode": "LOCAL_FALLBACK",
-            "live_connected": False,
-            "status": "LOCAL_SERVICE_VERIFIED",
-            "notes": "4-agent execution sequence (Intake -> Evidence -> Scheme -> Safety Critic) passing"
+            "service": "Lyzr AI Studio Multi-Agent",
+            "mode": lyzr_adapter.mode.upper(),
+            "live_connected": not lyzr_adapter.is_mock,
+            "status": "LIVE_CONNECTED" if not lyzr_adapter.is_mock else "LOCAL_SERVICE_VERIFIED",
+            "notes": f"4-Agent Mesh Live: Manager ({lyzr_adapter.agent_navigator[:8]}..), Safety Guardrail, Schemes, Protocols"
         },
         {
             "service": "BHASHINI Multilingual Speech",

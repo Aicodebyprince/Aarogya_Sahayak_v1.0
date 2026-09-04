@@ -153,6 +153,7 @@ class AgentExecutionResult(BaseModel):
     orchestrator: str
     latency_ms: float
     swytchcode_execution: Optional[Dict[str, Any]] = None
+    lyzr_execution: Optional[Dict[str, Any]] = None
 
 class HandoffSymptomItem(BaseModel):
     code: str

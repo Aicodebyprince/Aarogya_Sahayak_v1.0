@@ -141,7 +141,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
     )
 
 
-from app.routers import auth, citizen, asha, doctor, doctor_chat, doctor_prescriptions, doctor_alerts, admin, reports, websocket, ai, schemes, locations, voice, swytchcode
+from app.routers import auth, citizen, asha, doctor, doctor_chat, doctor_prescriptions, doctor_alerts, admin, reports, websocket, ai, schemes, locations, voice, swytchcode, lyzr
 
 # Include Routers
 app.include_router(auth.router, prefix=settings.API_V1_STR)
@@ -163,6 +163,7 @@ app.include_router(schemes.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(ai.router, prefix=settings.API_V1_STR)
 app.include_router(swytchcode.router, prefix=settings.API_V1_STR)
+app.include_router(lyzr.router, prefix=settings.API_V1_STR)
 app.include_router(websocket.router, prefix=settings.API_V1_STR)
 app.include_router(websocket.ws_router, prefix=settings.API_V1_STR)
 

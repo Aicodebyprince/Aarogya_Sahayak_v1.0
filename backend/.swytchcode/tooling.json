@@ -1,5 +1,11 @@
 {
   "editor": "none",
+  "permissions": {
+    "network": [
+      "api.sarvam.ai",
+      "generativelanguage.googleapis.com"
+    ]
+  },
   "integrations": {
     "Gemini.gemini": {
       "version": "v1beta-2026-08-17"

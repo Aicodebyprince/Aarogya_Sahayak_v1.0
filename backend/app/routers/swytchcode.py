@@ -19,6 +19,10 @@ class ToolExecutionRequest(BaseModel):
     is_pregnant: Optional[bool] = True
     gestational_weeks: Optional[int] = 32
     language_code: Optional[str] = "mr-IN"
+    text: Optional[str] = None
+    source_language_code: Optional[str] = "en-IN"
+    target_language_code: Optional[str] = "hi-IN"
+    prompt: Optional[str] = None
 
 @router.get("/status")
 def get_swytchcode_status() -> Dict[str, Any]:
@@ -59,6 +63,45 @@ def execute_swytchcode_tool(request: ToolExecutionRequest) -> Dict[str, Any]:
             longitude=75.3433,
             required_capability="24x7_emergency"
         )
+    elif request.tool_name == "sarvam_apis.translate.create":
+        if not request.text:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="'text' is required for translate"
+            )
+        return swytchcode_adapter.exec_translate(
+            text=request.text,
+            source_language_code=request.source_language_code or "en-IN",
+            target_language_code=request.target_language_code or "hi-IN",
+        )
+    elif request.tool_name == "sarvam_apis.transliterate.create":
+        if not request.text:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="'text' is required for transliterate"
+            )
+        return swytchcode_adapter.exec_transliterate(
+            text=request.text,
+            source_language_code=request.source_language_code or "en-IN",
+            target_language_code=request.target_language_code or "hi-IN",
+        )
+    elif request.tool_name == "sarvam_apis.stream.create":
+        if not request.text:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="'text' is required for tts stream"
+            )
+        return swytchcode_adapter.exec_tts_stream(
+            text=request.text,
+            target_language_code=request.target_language_code or "hi-IN",
+        )
+    elif request.tool_name == "gemini.model.modelgenerateContent.create":
+        if not request.prompt:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="'prompt' is required for gemini generation"
+            )
+        return swytchcode_adapter.exec_gemini_generate(prompt=request.prompt)
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -80,15 +123,14 @@ def get_tooling_manifest() -> Dict[str, Any]:
     """
     Returns Swytchcode tooling.json configuration manifest.
     """
-    manifest_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../../../swytchcode/tooling.json")
-    )
+    backend_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+    manifest_path = os.path.join(backend_root, ".swytchcode", "tooling.json")
     if os.path.exists(manifest_path):
         with open(manifest_path, "r", encoding="utf-8") as f:
             return json.load(f)
     return {
         "project": "aarogya-sahayak",
-        "status": "MANIFEST_FOUND_IN_MEMORY",
+        "status": "MANIFEST_NOT_FOUND",
         "tools": [
             "dispatch_emergency_asha_alert",
             "sarvam_indic_voice_gateway",

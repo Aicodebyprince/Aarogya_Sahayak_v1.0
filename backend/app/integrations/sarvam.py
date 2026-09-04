@@ -1,8 +1,11 @@
 import requests
+import logging
 from typing import Dict, Any, Optional
 from app.integrations.base import BaseIntegrationAdapter
 from app.config import settings
 from app.integrations.swytchcode import swytchcode_adapter
+
+logger = logging.getLogger("aarogya-backend")
 
 class SarvamAdapter(BaseIntegrationAdapter):
     """
@@ -132,6 +135,26 @@ class SarvamAdapter(BaseIntegrationAdapter):
                 "translated_text": text,
                 "provider": "SARVAM_MOCK"
             }
+
+        # Swytchcode Kernel Path: execute translation through the governed kernel
+        # (sarvam_apis.translate.create) with validation, retries, and audit.
+        if swytchcode_adapter.kernel_live:
+            kernel_result = swytchcode_adapter.exec_translate(
+                text=text,
+                source_language_code=source_language_code,
+                target_language_code=target_language_code,
+            )
+            if kernel_result.get("status") == "SUCCESS":
+                return {
+                    "status": "SUCCESS",
+                    "translated_text": kernel_result.get("translated_text", text),
+                    "provider": "SARVAM_VIA_SWYTCHCODE",
+                    "swytchcode_trace": kernel_result.get("trace"),
+                }
+            logger.warning(
+                f"[Sarvam] Swytchcode kernel translate failed ({kernel_result.get('status')}), "
+                f"falling back to direct call."
+            )
 
         try:
             url = f"{self.base_url}/translate"

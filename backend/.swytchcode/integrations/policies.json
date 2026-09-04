@@ -1,0 +1,72 @@
+{
+  "policies": [
+    {
+      "id": "allowlist-registered-tools",
+      "name": "Tool Allowlist",
+      "description": "Only explicitly registered methods may execute. Blocks prompt-injected or hallucinated tool calls.",
+      "target": [
+        "sarvam_apis.translate.create",
+        "sarvam_apis.transliterate.create",
+        "sarvam_apis.stream.create",
+        "gemini.model.modelgenerateContent.create"
+      ],
+      "when": {
+        "field": "tool",
+        "operator": "exists"
+      },
+      "action": {
+        "type": "POLICY_BLOCKED",
+        "message": "Tool not in governance allowlist - execution denied."
+      }
+    },
+    {
+      "id": "indic-languages-only",
+      "name": "Indic Language Bundle",
+      "description": "Voice/translation calls restricted to governed Indic language codes.",
+      "target": [
+        "sarvam_apis.translate.create",
+        "sarvam_apis.transliterate.create"
+      ],
+      "when": {
+        "field": "source_language_code",
+        "operator": "not_in",
+        "value": [
+          "hi-IN",
+          "mr-IN",
+          "en-IN",
+          "ta-IN",
+          "te-IN",
+          "kn-IN",
+          "ml-IN",
+          "gu-IN",
+          "pa-IN",
+          "bn-IN",
+          "od-IN",
+          "as-IN",
+          "ur-IN"
+        ]
+      },
+      "action": {
+        "type": "POLICY_BLOCKED",
+        "message": "Language code outside governed Indic bundle."
+      }
+    },
+    {
+      "id": "gemini-max-tokens",
+      "name": "LLM Output Budget",
+      "description": "Caps LLM output tokens to control cost and response size.",
+      "target": [
+        "gemini.model.modelgenerateContent.create"
+      ],
+      "when": {
+        "field": "maxOutputTokens",
+        "operator": ">",
+        "value": 2048
+      },
+      "action": {
+        "type": "POLICY_BLOCKED",
+        "message": "LLM output budget exceeded governance limit."
+      }
+    }
+  ]
+}

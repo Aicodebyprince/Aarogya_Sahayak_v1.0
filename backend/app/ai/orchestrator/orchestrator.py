@@ -10,6 +10,7 @@ from app.ai.graph.scheme_graph import scheme_graph_service
 from app.ai.providers.gemini_service import gemini_service
 from app.safety.emergency_rules import EmergencyRuleEvaluator
 from app.integrations.swytchcode import swytchcode_adapter
+from app.integrations.lyzr import lyzr_adapter
 
 class MultiAgentOrchestrator:
     """
@@ -135,6 +136,22 @@ class MultiAgentOrchestrator:
         # 6. Agent 4: Safety Critic Agent (Runs Last)
         critique = gemini_service.evaluate_safety_critic(intake=intake, summary=evidence_summary)
 
+        # 7. Lyzr AI Multi-Agent Consensus & Clinical Decision Engine
+        lyzr_trace = None
+        try:
+            lyzr_trace = lyzr_adapter.route_and_triage(
+                normalized_text=masked_text,
+                is_pregnant=is_pregnant,
+                gestational_weeks=gestational_weeks,
+                systolic_bp=systolic_bp,
+                diastolic_bp=diastolic_bp,
+                spo2=spo2,
+                temperature_c=temperature_c,
+                session_id=exec_id
+            )
+        except Exception:
+            pass
+
         latency_ms = round((time.time() - start_time) * 1000, 2)
 
         # Log usage to database if db session is available
@@ -156,6 +173,8 @@ class MultiAgentOrchestrator:
         except Exception:
             pass
 
+        active_orchestrator = "LYZR_MULTI_AGENT_MESH" if (lyzr_trace and lyzr_trace.get("status") == "LIVE") else "HYBRID_ORCHESTRATOR"
+
         return AgentExecutionResult(
             execution_id=exec_id,
             intake=intake,
@@ -163,9 +182,10 @@ class MultiAgentOrchestrator:
             schemes=scheme_dtos,
             critique=critique,
             provider_mode=gemini_service.get_mode(),
-            orchestrator="LOCAL_ORCHESTRATOR",
+            orchestrator=active_orchestrator,
             latency_ms=latency_ms,
-            swytchcode_execution=swytchcode_trace
+            swytchcode_execution=swytchcode_trace,
+            lyzr_execution=lyzr_trace
         )
 
 orchestrator_service = MultiAgentOrchestrator()

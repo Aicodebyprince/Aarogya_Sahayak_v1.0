@@ -37,7 +37,9 @@ services:
       - key: SARVAM_MODE
         value: mock
       - key: TAVILY_MODE
-        value: mock
+        value: live
+      - key: TAVILY_API_KEY
+        sync: false
       - key: NEO4J_MODE
         value: mock
       - key: MILVUS_MODE
@@ -50,6 +52,20 @@ services:
         value: mock
       - key: SWYTCHCODE_API_KEY
         sync: false
+      - key: LYZR_MODE
+        value: live
+      - key: LYZR_API_KEY
+        sync: false
+      - key: LYZR_AGENT_ID
+        value: "6a9ae0e14a372650b843a9ae"
+      - key: LYZR_SAFETY_AGENT_ID
+        value: "6a9ae9404e6f909d5b1ce8e7"
+      - key: LYZR_SCHEME_AGENT_ID
+        value: "6a9aeb88f70815409cbca57f"
+      - key: LYZR_PROTOCOL_AGENT_ID
+        value: "6a9aec908d69d22325c3e67f"
+      - key: LYZR_API_URL
+        value: "https://agent-prod.studio.lyzr.ai/v3/inference/chat/"
       # Optional live keys (add later via dashboard when needed)
 
 databases:
