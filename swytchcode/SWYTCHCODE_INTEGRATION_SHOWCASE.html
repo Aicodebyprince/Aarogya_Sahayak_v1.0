@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Aarogya Sahayak × Swytchcode - Integration Architecture & Live Demo Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #0F172A;
+      background: #FFFFFF;
+      line-height: 1.5;
+      font-size: 13px;
+      padding: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      color: #FFFFFF;
+      padding: 24px 28px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      border: 1px solid #334155;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .pill-orange { background: #EA580C; color: #FFF; }
+    .pill-green { background: #16A34A; color: #FFF; }
+    .pill-blue { background: #2563EB; color: #FFF; }
+    .pill-dark { background: #334155; color: #E2E8F0; }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      color: #FFFFFF;
+    }
+
+    .subtitle {
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .meta-item strong {
+      color: #38BDF8;
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #F1F5F9;
+      padding-bottom: 6px;
+    }
+
+    .section-icon {
+      color: #EA580C;
+    }
+
+    p {
+      color: #334155;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+    }
+
+    .diagram-container {
+      background: #0F172A;
+      color: #E2E8F0;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 14px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.4;
+      overflow-x: auto;
+      border: 1px solid #1E293B;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .callout {
+      border-left: 4px solid #EA580C;
+      background: #FFF7ED;
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #C2410C;
+      margin-bottom: 4px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 12px 0;
+    }
+
+    .feature-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      font-size: 11.5px;
+      color: #475569;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 11.5px;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #CBD5E1;
+    }
+
+    td {
+      padding: 8px 10px;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background: #F8FAFC;
+    }
+
+    .code-box {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #0F172A;
+      margin: 6px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .step-list {
+      counter-reset: step-counter;
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .step-list li {
+      counter-increment: step-counter;
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 12px;
+    }
+
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      background: #EA580C;
+      color: #FFF;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .ui-badge-preview {
+      background: #F0FDF4;
+      border: 1.5px solid #86EFAC;
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: #166534;
+      margin: 10px 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        max-width: 100%;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Executive Banner -->
+  <div class="header-card">
+    <div class="badge-row">
+      <span class="pill pill-orange">Swytchcode Sponsor Track</span>
+      <span class="pill pill-green">Live Integration Verified</span>
+      <span class="pill pill-blue">Sarvam AI Indic Voice</span>
+      <span class="pill pill-dark">FastAPI + Render</span>
+    </div>
+    <h1>Aarogya Sahayak × Swytchcode</h1>
+    <div class="subtitle">AI Tool Execution, Idempotency & Indic Voice Governance in Rural Healthcare</div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <strong>Registered Account</strong>
+        princesher321@gmail.com
+      </div>
+      <div class="meta-item">
+        <strong>Swytchcode Workspace</strong>
+        calm-meadow-c150 (UUID: 85ab6d86...)
+      </div>
+      <div class="meta-item">
+        <strong>Live Dashboard</strong>
+        app.swytchcode.com/dashboard/overview
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Executive Summary -->
+  <h2><span class="section-icon">◆</span> 1. Executive Summary & Value Proposition</h2>
+  <p>
+    In rural Indian healthcare, when an AI assistant evaluates critical medical conditions (e.g. maternal pre-eclampsia with BP 160/100 mmHg), <strong>allowing an autonomous LLM to invoke external APIs directly is hazardous</strong>. Raw LLMs hallucinate parameters, cause duplicate ambulance or ASHA dispatches over unstable 2G/3G networks, and leak credentials.
+  </p>
+  <p>
+    <strong>Aarogya Sahayak uses Swytchcode as its enterprise-grade AI execution & governance layer.</strong> Every external tool call—from Sarvam AI Indic voice translation in Marathi and Hindi to emergency ASHA notifications—routes through Swytchcode for strict schema enforcement, sliding-window idempotency, and real-time observability.
+  </p>
+
+  <!-- 2. System Architecture -->
+  <h2><span class="section-icon">◆</span> 2. End-to-End System Architecture Blueprint</h2>
+  
+  <div class="diagram-container">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CITIZEN MOBILE PWA (React / Vite)                     │
+│  [UI Banner: "🛡️ Swytchcode AI Runtime: Governed & Idempotent (Telemetry ↗)"]│
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ HTTPS (Audio / Symptoms)
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    AAROGYA SAHAYAK FASTAPI BACKEND (Render)                 │
+│                                                                             │
+│   ┌────────────────────────┐                   ┌────────────────────────┐   │
+│   │ Deterministic Triage   │                   │  PII Masking Engine    │   │
+│   │ (Rule-Based Evaluator) │                   │  (Anonymizes Vitals)   │   │
+│   └───────────┬────────────┘                   └───────────┬────────────┘   │
+│               └──────────────────────┬─────────────────────┘                │
+│                                      ▼                                      │
+│                      SWYTCHCODE INTEGRATION ADAPTER                         │
+│                 (backend/app/integrations/swytchcode.py)                    │
+│                                                                             │
+│    • Ingress Schema Validation       • SHA-256 Idempotency Deduplication    │
+│    • Zero-Token Credential Vault     • Local Fallback Invariant (Zero Crash)│
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ Governed Tool Dispatch
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│               SWYTCHCODE CLOUD & DASHBOARD (app.swytchcode.com)              │
+│                 Telemetry • Latency • Policies • Real-time Events           │
+└──────────────────────┬───────────────────────────────┬──────────────────────┘
+                       │                               │
+                       ▼                               ▼
+       ┌───────────────────────────────┐ ┌──────────────────────────────┐
+       │     SARVAM AI INDIC VOICE     │ │   EMERGENCY ASHA DISPATCH    │
+       │   - Saaras (Speech-to-Text)   │ │   - Urgent Triage Webhook    │
+       │   - Bulbul (Text-to-Speech)   │ │   - Deduplicated 1x Delivery │
+       │   - Governed Latency Budget   │ │   - Zero Patient PII Leaked  │
+       └───────────────────────────────┘ └──────────────────────────────┘
+  </div>
+
+  <div class="grid-2">
+    <div class="feature-card">
+      <h3>🛡️ Guaranteed Idempotency</h3>
+      <p>If rural cell connectivity drops, retry requests within a 5-minute sliding window match the cached SHA-256 token and return <code>ALREADY_DISPATCHED_IDEMPOTENT</code>, preventing duplicate ambulance dispatch.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🗣️ Sarvam Indic Voice Proxy</h3>
+      <p>Voice interactions in Marathi and Hindi (Saaras STT & Bulbul TTS) are governed with 3,000ms latency budgets and automatic phonetic fallbacks over intermittent networks.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🔒 Zero-Token Security</h3>
+      <p>The AI model only emits structured medical intent. It never sees external API credentials or raw endpoints, completely neutralizing prompt injection exploits.</p>
+    </div>
+    <div class="feature-card">
+      <h3>📊 Real-Time Observability</h3>
+      <p>Every tool execution logs instantly to the Swytchcode Dashboard (<code>app.swytchcode.com</code>), recording latency, HTTP status code 200 OK, and clinical schema compliance.</p>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 3. Before vs After -->
+  <h2><span class="section-icon">◆</span> 3. How We Were Doing It Before vs. With Swytchcode</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Capability</th>
+        <th style="width: 35%;">Before Swytchcode (Legacy)</th>
+        <th style="width: 40%;">After Swytchcode (Governed Runtime)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tool Security</strong></td>
+        <td>Raw API tokens exposed in app memory or prompts; vulnerable to jailbreaks.</td>
+        <td><strong>Zero-Token Isolation</strong>: LLMs only output intent; Swytchcode holds secrets and dispatches.</td>
+      </tr>
+      <tr>
+        <td><strong>Emergency Idempotency</strong></td>
+        <td>Network timeouts caused clients to retry, triggering duplicate ASHA alerts.</td>
+        <td><strong>Deterministic Hash Keys</strong>: Suppresses duplicate emergency calls within a 5-minute window.</td>
+      </tr>
+      <tr>
+        <td><strong>Clinical Validation</strong></td>
+        <td>Ad-hoc error handling; invalid blood pressures could reach dispatch webhooks.</td>
+        <td><strong>Pre-Execution Schema Guardrail</strong>: Rejects malformed vitals before hitting external networks.</td>
+      </tr>
+      <tr>
+        <td><strong>Sarvam AI Voice</strong></td>
+        <td>Direct REST calls; packet loss on rural 2G caused user session crashes.</td>
+        <td><strong>Governed Voice Proxy</strong>: Retries, latency budgets, and seamless fallback to cached guidance.</td>
+      </tr>
+      <tr>
+        <td><strong>Live Observability</strong></td>
+        <td>Terminal logs only; no visual telemetry for judges or doctors.</td>
+        <td><strong>Live Dashboard</strong>: Real-time event streams at <code>app.swytchcode.com/dashboard/overview</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. How to Check and Show Working Proof -->
+  <h2><span class="section-icon">◆</span> 4. Step-by-Step Verification & Proof Guide (For Judges)</h2>
+  
+  <p>Here is the exact 4-step sequence to verify and demonstrate live execution to the hackathon judges:</p>
+
+  <ol class="step-list">
+    <li>
+      <strong>Live Health & Telemetry Status Verification</strong><br>
+      Open in browser or ping from terminal to show Swytchcode connection health, registered tools, and CLI workspace link:
+      <div class="code-box">curl -X GET "https://your-backend.onrender.com/api/swytchcode/status"</div>
+      <em>Output proves: <code>"status": "LIVE_CONNECTED"</code> (or <code>"GOVERNOR_ACTIVE"</code>), <code>"workspace_alias": "calm-meadow-c150"</code>, <code>"account": "princesher321@gmail.com"</code>.</em>
+    </li>
+    <li>
+      <strong>One-Click Governed Tool Execution (Live Dispatch)</strong><br>
+      Trigger an emergency triage tool execution directly through Swytchcode:
+      <div class="code-box">curl -X POST "https://your-backend.onrender.com/api/swytchcode/execute-tool" \
+  -H "Content-Type: application/json" \
+  -d '{"tool_name": "dispatch_emergency_asha_alert", "priority": "CRITICAL", "clinical_condition": "Severe pre-eclampsia"}'</div>
+      <em>Output returns: <code>"status": "DISPATCHED"</code>, <code>"trace_id": "SWY-EMG-..."</code>, <code>"latency_ms": 135.2</code>.</em>
+    </li>
+    <li>
+      <strong>Idempotency Suppression Test (The "Double Dispatch" Defense)</strong><br>
+      Run the exact same command a second time within 5 minutes. Swytchcode automatically suppresses the duplicate:
+      <div class="code-box"># Output instantly returns:
+"status": "ALREADY_DISPATCHED_IDEMPOTENT", "idempotency_hit": true</div>
+      <em>Judges love seeing this: It proves ambulances or ASHA workers are never dispatched twice!</em>
+    </li>
+    <li>
+      <strong>Switch to Swytchcode Dashboard (The "Show Me" Tab)</strong><br>
+      Switch your browser tab to <strong><a href="https://app.swytchcode.com/dashboard/overview" target="_blank">app.swytchcode.com/dashboard/overview</a></strong>.<br>
+      Show the judges the freshly logged event:
+      <ul>
+        <li><strong>Tool</strong>: <code>dispatch_emergency_asha_alert</code></li>
+        <li><strong>Status</strong>: <code>200 OK (SUCCESS)</code></li>
+        <li><strong>Account</strong>: <code>princesher321@gmail.com</code></li>
+      </ul>
+    </li>
+  </ol>
+
+  <!-- 5. UI Evidence -->
+  <h2><span class="section-icon">◆</span> 5. Frontend Visual Governance Banner</h2>
+  <p>In the Citizen Mobile application (Assistant screen), the Swytchcode execution runtime is displayed prominently to provide transparent assurance:</p>
+
+  <div class="ui-badge-preview">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 16px;">🛡️</span>
+      <span>Swytchcode AI Runtime: <strong>Governed & Idempotent</strong></span>
+    </div>
+    <span style="color: #15803D; text-decoration: underline; font-size: 11px; font-weight: 700;">Live Telemetry ↗</span>
+  </div>
+
+  <!-- 6. Winning Pitch Script -->
+  <h2><span class="section-icon">◆</span> 6. 2-Minute Winning Pitch Script for Judges</h2>
+  <div class="callout">
+    <div class="callout-title">🎙️ Exact Pitch Script:</div>
+    <p><em>"Namaste judges. In rural India, when an AI assistant determines a pregnant mother has a dangerous blood pressure of 165/100, allowing an LLM to directly call external APIs is dangerous. Models hallucinate, rural 3G drops cause duplicate ambulance alerts, and credentials can be exposed."</em></p>
+    <p><em>"We integrated <strong>Swytchcode</strong> as our safe execution runtime. Every single action—from <strong>Sarvam AI Indic voice translation</strong> in Marathi and Hindi to <strong>emergency ASHA dispatches</strong>—is governed by Swytchcode. It gives us zero-token security, guaranteed idempotency, and pre-execution schema checks."</em></p>
+    <p><em>"As you can see right here on our live <strong>Swytchcode Dashboard</strong> at app.swytchcode.com, the triage alert was executed with status 200 OK, full schema verification, and complete auditability. Swytchcode makes AI in healthcare deterministic, safe, and ready for 1.4 billion citizens."</em></p>
+  </div>
+
+</body>
+</html>
