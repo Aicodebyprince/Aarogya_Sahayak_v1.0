@@ -1,0 +1,129 @@
+{
+  "methods": [
+    {
+      "method_uuid": "",
+      "method_name": "Create a new agent deployment for inbound calls",
+      "canonical_id": "sarvam_voice_agents.workspace.deployments.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new campaign for an organization and workspace",
+      "canonical_id": "sarvam_voice_agents.workspace.campaigns.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a specific deployment and stop all call handling",
+      "canonical_id": "sarvam_voice_agents.workspace.deployments.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download a specific cohort file from an organization's workspace",
+      "canonical_id": "sarvam_voice_agents.workspace.files.get1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download a specific file for a cohort",
+      "canonical_id": "sarvam_voice_agents.workspace.files.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch paginated app attempts with filters and sorting",
+      "canonical_id": "sarvam_voice_agents.attempt.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch paginated app interactions with filtering and sorting",
+      "canonical_id": "sarvam_voice_agents.interaction.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch transcript for a specific interaction",
+      "canonical_id": "sarvam_voice_agents.transcript.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific interaction recording by ID",
+      "canonical_id": "sarvam_voice_agents.recording.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get campaigns for a workspace with filtering and sorting",
+      "canonical_id": "sarvam_voice_agents.workspace.campaigns.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get cohorts for a specific campaign",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get deployments for a workspace with filtering and sorting",
+      "canonical_id": "sarvam_voice_agents.workspace.deployments.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get full campaign details including agent configuration, schedule, and retry policy",
+      "canonical_id": "sarvam_voice_agents.workspace.campaigns.get1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Initiate an outbound API request for a workspace",
+      "canonical_id": "sarvam_voice_agents.workspace.outbounds.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List all cohorts for a deployment",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.get2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Obtain a JWT access token for authentication",
+      "canonical_id": "sarvam_voice_agents.auth.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Pause or resume a deployment's inbound calls",
+      "canonical_id": "sarvam_voice_agents.workspace.status.update1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve cohort details and processing status",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.get1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve cohort details and processing status",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.get3"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve full deployment details by ID",
+      "canonical_id": "sarvam_voice_agents.workspace.deployments.get1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a campaign's configuration and schedule",
+      "canonical_id": "sarvam_voice_agents.workspace.campaigns.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a campaign's status to pause, resume, or cancel",
+      "canonical_id": "sarvam_voice_agents.workspace.status.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a deployment's configuration",
+      "canonical_id": "sarvam_voice_agents.workspace.deployments.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Upload a cohort with name, CSV, and transformation file",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.upload"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Upload a user cohort for a deployment",
+      "canonical_id": "sarvam_voice_agents.workspace.cohorts.upload1"
+    }
+  ]
+}

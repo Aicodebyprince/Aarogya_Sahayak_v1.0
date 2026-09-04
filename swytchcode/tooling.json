@@ -1,0 +1,117 @@
+{
+  "$schema": "https://swytchcode.com/schemas/tooling-v1.json",
+  "project": "aarogya-sahayak",
+  "version": "1.0.0",
+  "description": "Governed Healthcare API and Tool Execution Manifest for Aarogya Sahayak",
+  "policies": {
+    "default_timeout_ms": 5000,
+    "max_retries": 3,
+    "backoff_multiplier": 1.5,
+    "block_direct_db_mutations": true,
+    "enforce_idempotency": true,
+    "scrub_pii_before_dispatch": true
+  },
+  "tools": [
+    {
+      "name": "dispatch_emergency_asha_alert",
+      "description": "Dispatches an urgent clinical escalation notification to an assigned ASHA worker and PHC doctor queue",
+      "category": "emergency_care",
+      "method": "POST",
+      "execution_boundary": "swytchcode_governed",
+      "idempotency_key_path": "payload.idempotency_key",
+      "input_schema": {
+        "type": "object",
+        "required": ["case_id", "priority", "clinical_condition", "idempotency_key"],
+        "properties": {
+          "case_id": { "type": "string", "description": "Unique patient triage case reference" },
+          "citizen_token": { "type": "string", "description": "De-identified patient token" },
+          "priority": { "type": "string", "enum": ["CRITICAL", "HIGH", "MODERATE"] },
+          "clinical_condition": { "type": "string", "description": "Summary of triggered clinical danger signs" },
+          "vitals": {
+            "type": "object",
+            "properties": {
+              "systolic_bp": { "type": "integer", "minimum": 60, "maximum": 260 },
+              "diastolic_bp": { "type": "integer", "minimum": 40, "maximum": 160 },
+              "spo2": { "type": "integer", "minimum": 40, "maximum": 100 },
+              "temperature_c": { "type": "number" }
+            }
+          },
+          "is_pregnant": { "type": "boolean" },
+          "gestational_weeks": { "type": "integer", "minimum": 1, "maximum": 45 },
+          "assigned_asha_id": { "type": "string" },
+          "idempotency_key": { "type": "string" }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["status", "dispatched_at", "audit_trace_id"],
+        "properties": {
+          "status": { "type": "string", "enum": ["DISPATCHED", "ALREADY_DISPATCHED", "FAILED"] },
+          "dispatched_at": { "type": "string", "format": "date-time" },
+          "audit_trace_id": { "type": "string" },
+          "target_queue": { "type": "string" },
+          "latency_ms": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "sarvam_indic_voice_gateway",
+      "description": "Governed proxy for Sarvam AI Indic Speech-to-Text and Text-to-Speech in rural Indian languages",
+      "category": "voice_ai",
+      "method": "POST",
+      "execution_boundary": "swytchcode_governed",
+      "policies": {
+        "timeout_ms": 3000,
+        "max_retries": 2,
+        "allowed_languages": ["mr-IN", "hi-IN", "en-IN"]
+      },
+      "input_schema": {
+        "type": "object",
+        "required": ["operation", "language_code"],
+        "properties": {
+          "operation": { "type": "string", "enum": ["speech_to_text", "text_to_speech", "translate"] },
+          "language_code": { "type": "string", "enum": ["mr-IN", "hi-IN", "en-IN"] },
+          "text": { "type": "string", "description": "Text payload for TTS or translation" },
+          "speaker": { "type": "string", "default": "ritu" }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["status", "provider"],
+        "properties": {
+          "status": { "type": "string", "enum": ["SUCCESS", "FALLBACK_LOCAL", "ERROR"] },
+          "transcript": { "type": "string" },
+          "audio_url": { "type": "string" },
+          "provider": { "type": "string" },
+          "confidence": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "query_health_facility_registry",
+      "description": "Queries nearby empanelled healthcare facilities with capability-based filtering (read-only)",
+      "category": "facility_discovery",
+      "method": "GET",
+      "execution_boundary": "swytchcode_read_only",
+      "input_schema": {
+        "type": "object",
+        "required": ["latitude", "longitude", "required_capability"],
+        "properties": {
+          "latitude": { "type": "number" },
+          "longitude": { "type": "number" },
+          "required_capability": { "type": "string", "enum": ["24x7_emergency", "labor_room", "trauma_icu", "blood_bank", "pmjay_desk"] },
+          "max_distance_km": { "type": "number", "default": 25.0 }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["facility_count", "facilities"],
+        "properties": {
+          "facility_count": { "type": "integer" },
+          "facilities": { "type": "array" },
+          "verification_source": { "type": "string" }
+        }
+      }
+    }
+  ]
+}

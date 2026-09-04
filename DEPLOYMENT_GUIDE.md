@@ -92,6 +92,7 @@ When setting up a **Live-Integration Hackathon Demo**, configure these secret en
 | `TWILIO_AUTH_TOKEN` | Twilio Auth Token | [Twilio Console](https://console.twilio.com/) | **Yes** (when `OTP_MODE=TWILIO`) |
 | `TWILIO_FROM_NUMBER` | Twilio Outbound Number | [Twilio Phone Numbers](https://console.twilio.com/) | **Yes** (when `OTP_MODE=TWILIO`) |
 | `MSG91_AUTH_KEY` | MSG91 Indian SMS Gateway | [MSG91 Dashboard](https://msg91.com/) | **Yes** (when `OTP_MODE=MSG91`) |
+| `SWYTCHCODE_API_KEY` | Swytchcode AI Tool Governance Runtime | [Swytchcode App](https://app.swytchcode.com/dashboard/overview) | **Yes** (when `SWYTCHCODE_MODE=live`) |
 
 > [!NOTE]
 > **Architecture & Boundary Distinctions:**

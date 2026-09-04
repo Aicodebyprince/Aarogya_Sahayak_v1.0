@@ -1,0 +1,395 @@
+{
+  "editor": "none",
+  "integrations": {
+    "Gemini.gemini": {
+      "version": "v1beta-2026-08-17"
+    },
+    "Sarvam ai.sarvam_apis": {
+      "version": "v1"
+    }
+  },
+  "mode": "sandbox",
+  "tools": {
+    "gemini.model.modelgenerateContent.create": {
+      "desc": "",
+      "inputs": [
+        {
+          "model": {
+            "LOCATION": "path",
+            "REQUIRED": true,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "CONTENT_TYPE": "application/json",
+            "LOCATION": "body",
+            "REQUIRED": true,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "cachedContent": {
+                  "required": false,
+                  "type": "string"
+                },
+                "contents": {
+                  "items": {
+                    "properties": {
+                      "parts": {
+                        "required": false,
+                        "type": "[]map[STRING]ANY"
+                      },
+                      "role": {
+                        "required": false,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "required": true,
+                  "type": "array"
+                },
+                "generationConfig": {
+                  "required": false,
+                  "type": "map[STRING]ANY"
+                },
+                "safetySettings": {
+                  "required": false,
+                  "type": "[]map[STRING]ANY"
+                },
+                "systemInstruction": {
+                  "required": false,
+                  "type": "map[STRING]ANY"
+                },
+                "toolConfig": {
+                  "required": false,
+                  "type": "map[STRING]ANY"
+                },
+                "tools": {
+                  "required": false,
+                  "type": "[]map[STRING]ANY"
+                }
+              },
+              "required": [
+                "contents"
+              ]
+            }
+          }
+        }
+      ],
+      "integration": "Gemini.gemini@v1beta-2026-08-17",
+      "method_hash": "b6fbfbdf9cde7792c4a92ba9aae8d01777922c296dd498e22f86e1689b96047f",
+      "output": {
+        "schema": {
+          "type": "map[STRING]ANY"
+        },
+        "status": 200
+      },
+      "summary": "Generate content",
+      "type": "method"
+    },
+    "sarvam_apis.stream.create": {
+      "desc": "Converts the input text into a streamed spoken audio response.\n\nThis endpoint supports streaming audio using the specified output codec (e.g., `audio/mpeg` for MP3). The response is returned as a binary audio stream, which can be played or saved directly by the client.\n\nSupports the `dict_id` parameter to apply a [pronunciation dictionary](https://docs.sarvam.ai/api-reference-docs/pronunciation-dictionary/create) during synthesis.",
+      "inputs": [
+        {
+          "api-subscription-key": {
+            "LOCATION": "header",
+            "REQUIRED": true,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "CONTENT_TYPE": "application/json",
+            "LOCATION": "body",
+            "REQUIRED": false,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "dict_id": {
+                  "required": false,
+                  "type": "string"
+                },
+                "enable_cached_responses": {
+                  "required": false,
+                  "type": "boolean"
+                },
+                "enable_preprocessing": {
+                  "required": false,
+                  "type": "boolean"
+                },
+                "language_code": {
+                  "required": false,
+                  "type": "string"
+                },
+                "loudness": {
+                  "required": false,
+                  "type": "FLOAT"
+                },
+                "model": {
+                  "required": false,
+                  "type": "string"
+                },
+                "output_audio_bitrate": {
+                  "required": false,
+                  "type": "string"
+                },
+                "output_audio_codec": {
+                  "required": false,
+                  "type": "string"
+                },
+                "pace": {
+                  "required": false,
+                  "type": "FLOAT"
+                },
+                "pitch": {
+                  "required": false,
+                  "type": "FLOAT"
+                },
+                "speaker": {
+                  "properties": {
+                    "_COMPOSITION": {
+                      "required": false,
+                      "type": "ONE_OF"
+                    },
+                    "variant_1": {
+                      "required": false,
+                      "type": "NULL"
+                    },
+                    "variant_Sarvam_Model_API_TextToSpeechSpeaker": {
+                      "required": false,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "speech_sample_rate": {
+                  "properties": {
+                    "_COMPOSITION": {
+                      "required": false,
+                      "type": "ONE_OF"
+                    },
+                    "variant_1": {
+                      "required": false,
+                      "type": "NULL"
+                    },
+                    "variant_Sarvam_Model_API_SpeechSampleRate": {
+                      "required": false,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "temperature": {
+                  "required": false,
+                  "type": "FLOAT"
+                },
+                "text": {
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          }
+        }
+      ],
+      "integration": "Sarvam ai.sarvam_apis@v1",
+      "method_hash": "db4ce455f3409541d966feb59ae49eb6d12a264b3b5e57430aa00701a3f1593e",
+      "output": {
+        "schema": {
+          "type": "any"
+        },
+        "status": 200
+      },
+      "summary": "Text-to-Speech Stream Audio",
+      "type": "method"
+    },
+    "sarvam_apis.translate.create": {
+      "desc": "**Translation** converts text from one language to another while preserving its meaning.\nFor Example: **'मैं ऑफिस जा रहा हूँ'** translates to **'I am going to the office'** in English, where the script and language change, but the original meaning remains the same.\n\nAvailable languages:\n- **`bn-IN`**: Bengali\n- **`en-IN`**: English\n- **`gu-IN`**: Gujarati\n- **`hi-IN`**: Hindi\n- **`kn-IN`**: Kannada\n- **`ml-IN`**: Malayalam\n- **`mr-IN`**: Marathi\n- **`od-IN`**: Odia\n- **`pa-IN`**: Punjabi\n- **`ta-IN`**: Tamil\n- **`te-IN`**: Telugu\n\n### Newly added languages:\n- **`as-IN`**: Assamese\n- **`brx-IN`**: Bodo\n- **`doi-IN`**: Dogri\n- **`kok-IN`**: Konkani\n- **`ks-IN`**: Kashmiri\n- **`mai-IN`**: Maithili\n- **`mni-IN`**: Manipuri (Meiteilon)\n- **`ne-IN`**: Nepali\n- **`sa-IN`**: Sanskrit\n- **`sat-IN`**: Santali\n- **`sd-IN`**: Sindhi\n- **`ur-IN`**: Urdu\n\nFor hands-on practice, you can explore the notebook tutorial on [Translate API Tutorial](https://github.com/sarvamai/sarvam-ai-cookbook/blob/main/notebooks/translate/Translate_API_Tutorial.ipynb).",
+      "inputs": [
+        {
+          "api-subscription-key": {
+            "LOCATION": "header",
+            "REQUIRED": true,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "CONTENT_TYPE": "application/json",
+            "LOCATION": "body",
+            "REQUIRED": false,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "input": {
+                  "required": true,
+                  "type": "string"
+                },
+                "mode": {
+                  "required": false,
+                  "type": "string"
+                },
+                "model": {
+                  "required": false,
+                  "type": "string"
+                },
+                "numerals_format": {
+                  "required": false,
+                  "type": "string"
+                },
+                "output_script": {
+                  "properties": {
+                    "_COMPOSITION": {
+                      "required": false,
+                      "type": "ONE_OF"
+                    },
+                    "variant_1": {
+                      "required": false,
+                      "type": "NULL"
+                    },
+                    "variant_Sarvam_Model_API_TransliterateMode": {
+                      "required": false,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "source_language_code": {
+                  "required": true,
+                  "type": "string"
+                },
+                "speaker_gender": {
+                  "required": false,
+                  "type": "string"
+                },
+                "target_language_code": {
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "input",
+                "source_language_code",
+                "target_language_code"
+              ]
+            }
+          }
+        }
+      ],
+      "integration": "Sarvam ai.sarvam_apis@v1",
+      "method_hash": "90f07b1dfd6aa9dc1c7e73f7fafe8d1482f245e5a2350b268260f99174492c2f",
+      "output": {
+        "schema": {
+          "properties": {
+            "request_id": {
+              "required": true,
+              "type": "string"
+            },
+            "source_language_code": {
+              "required": true,
+              "type": "string"
+            },
+            "translated_text": {
+              "required": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "translated_text",
+            "source_language_code"
+          ]
+        },
+        "status": 200
+      },
+      "summary": "Translate Text",
+      "type": "method"
+    },
+    "sarvam_apis.transliterate.create": {
+      "desc": "**Transliteration** converts text from one script to another while preserving the original pronunciation. For example, **'नमस्ते'** becomes **'namaste'** in English, and **'how are you'** can be written as **'हाउ आर यू'** in Devanagari. This process ensures that the sound of the original text remains intact, even when written in a different script.\n\nTransliteration is useful when you want to represent words phonetically across different writing systems, such as converting **'मैं ऑफिस जा रहा हूँ'** to **'main office ja raha hun'** in English letters.\n\n**Translation**, on the other hand, converts text from one language to another while preserving the meaning rather than pronunciation. For example, **'मैं ऑफिस जा रहा हूँ'** translates to **'I am going to the office'** in English, changing both the script and the language while conveying the intended message.\n### Examples of **Transliteration**:\n- **'Good morning'** becomes **'गुड मॉर्निंग'** in Hindi, where the pronunciation is preserved but the meaning is not translated.\n- **'सुप्रभात'** becomes **'suprabhat'** in English.\n\nAvailable languages:\n- **`en-IN`**: English\n- **`hi-IN`**: Hindi\n- **`bn-IN`**: Bengali\n- **`gu-IN`**: Gujarati\n- **`kn-IN`**: Kannada\n- **`ml-IN`**: Malayalam\n- **`mr-IN`**: Marathi\n- **`od-IN`**: Odia\n- **`pa-IN`**: Punjabi\n- **`ta-IN`**: Tamil\n- **`te-IN`**: Telugu\n\nFor hands-on practice, you can explore the notebook tutorial on [Transliterate API Tutorial](https://github.com/sarvamai/sarvam-ai-cookbook/blob/main/notebooks/transliterate/Transliterate_API_Tutorial.ipynb).",
+      "inputs": [
+        {
+          "api-subscription-key": {
+            "LOCATION": "header",
+            "REQUIRED": true,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "CONTENT_TYPE": "application/json",
+            "LOCATION": "body",
+            "REQUIRED": false,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "input": {
+                  "required": true,
+                  "type": "string"
+                },
+                "numerals_format": {
+                  "required": false,
+                  "type": "string"
+                },
+                "source_language_code": {
+                  "required": true,
+                  "type": "string"
+                },
+                "spoken_form": {
+                  "required": false,
+                  "type": "boolean"
+                },
+                "spoken_form_numerals_language": {
+                  "required": false,
+                  "type": "string"
+                },
+                "target_language_code": {
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "input",
+                "source_language_code",
+                "target_language_code"
+              ]
+            }
+          }
+        }
+      ],
+      "integration": "Sarvam ai.sarvam_apis@v1",
+      "method_hash": "4478f225bf53f6c41dcf9ff362442a32a82e3881cf6a4a50ebb2e9227b5bc0ff",
+      "output": {
+        "schema": {
+          "properties": {
+            "request_id": {
+              "required": true,
+              "type": "string"
+            },
+            "source_language_code": {
+              "required": true,
+              "type": "string"
+            },
+            "transliterated_text": {
+              "required": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "transliterated_text",
+            "source_language_code"
+          ]
+        },
+        "status": 200
+      },
+      "summary": "Transliterate Text",
+      "type": "method"
+    }
+  },
+  "version": "2.20.15"
+}

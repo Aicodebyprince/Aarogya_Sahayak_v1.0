@@ -9,6 +9,7 @@ from app.ai.rag.clinical_rag import clinical_rag_service
 from app.ai.graph.scheme_graph import scheme_graph_service
 from app.ai.providers.gemini_service import gemini_service
 from app.safety.emergency_rules import EmergencyRuleEvaluator
+from app.integrations.swytchcode import swytchcode_adapter
 
 class MultiAgentOrchestrator:
     """
@@ -59,6 +60,25 @@ class MultiAgentOrchestrator:
             phone=phone,
             abha=abha
         )
+
+        # Swytchcode Governed Emergency Escalation Execution
+        swytchcode_trace = None
+        if priority in ("HIGH", "CRITICAL", "EMERGENCY") or rule_triggered:
+            swytchcode_trace = swytchcode_adapter.dispatch_emergency_asha_alert(
+                case_id=exec_id,
+                priority=priority,
+                clinical_condition=rule_reason or raw_text[:80],
+                vitals={
+                    "systolic_bp": systolic_bp,
+                    "diastolic_bp": diastolic_bp,
+                    "spo2": spo2,
+                    "temperature_c": temperature_c
+                },
+                is_pregnant=is_pregnant,
+                gestational_weeks=gestational_weeks,
+                assigned_asha_id="ASHA-KLN-04",
+                citizen_token=token_map.get("name_token")
+            )
 
         # 3. Agent 1: Intake Normalization Agent
         from app.ai.providers.llm_router import llm_router
@@ -144,7 +164,8 @@ class MultiAgentOrchestrator:
             critique=critique,
             provider_mode=gemini_service.get_mode(),
             orchestrator="LOCAL_ORCHESTRATOR",
-            latency_ms=latency_ms
+            latency_ms=latency_ms,
+            swytchcode_execution=swytchcode_trace
         )
 
 orchestrator_service = MultiAgentOrchestrator()

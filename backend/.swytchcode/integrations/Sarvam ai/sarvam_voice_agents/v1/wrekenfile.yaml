@@ -1,0 +1,2607 @@
+VERSION: 2.0.2
+DEFAULTS:
+  basic_auth: Basic <BASE64>
+  bearer_token: BEARER <TOKEN>
+  w_base_url: https://apps.sarvam.ai/api/app-authoring
+METHODS:
+  sarvam_voice_agents.workspace.deployments.create:
+    SUMMARY: Create Deployment
+    DESC: |-
+      Create a new deployment that connects an agent to a phone number for inbound calls.
+
+      The deployment is created in `active` status and immediately begins accepting calls. Optionally configure an `inbound_config` schedule to restrict calls to specific hours and days.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(CreateDeployment)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(CreateDeployment)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DeploymentDetails)
+        RETURNVAR: sarvam_voice_agents_workspace_deployments_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.deployments.create
+  sarvam_voice_agents.workspace.deployments.get:
+    SUMMARY: List Deployments
+    DESC: List all deployments in the workspace with optional filtering, sorting, and pagination.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 10
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - search:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedDeploymentRecord)
+        RETURNVAR: sarvam_voice_agents_workspace_deployments_get
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.deployments.get
+  sarvam_voice_agents.workspace.deployments.get1:
+    SUMMARY: Get Deployment
+    DESC: Get full details of a deployment including its agent version, connection config, inbound schedule, and current status.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+    RETURNS:
+      - RETURNTYPE: STRUCT(DeploymentDetails)
+        RETURNVAR: sarvam_voice_agents_workspace_deployments_get1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.deployments.get1
+  sarvam_voice_agents.workspace.deployments.update:
+    SUMMARY: Update Deployment
+    DESC: Update a deployment's configuration. You can update the name, description, agent version, connection config, and inbound schedule. Only include fields you want to change.
+    HTTP:
+      METHOD: PATCH
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(UpdateDeployment)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(UpdateDeployment)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DeploymentDetails)
+        RETURNVAR: sarvam_voice_agents_workspace_deployments_update
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.deployments.update
+  sarvam_voice_agents.workspace.deployments.delete:
+    SUMMARY: Delete Deployment
+    DESC: Permanently delete a deployment. This immediately stops all inbound call handling for the associated phone numbers.
+    HTTP:
+      METHOD: DELETE
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+    RETURNS:
+      - RETURNTYPE: ANY
+        RETURNVAR: sarvam_voice_agents_workspace_deployments_delete
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.deployments.delete
+  sarvam_voice_agents.workspace.status.update1:
+    SUMMARY: Update Deployment Status
+    DESC: |-
+      Pause or resume a deployment.
+
+      | Action | Effect |
+      |---|---|
+      | `pause` | Stop accepting inbound calls |
+      | `resume` | Start accepting inbound calls again |
+    HTTP:
+      METHOD: PUT
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}/status
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(UpdateDeploymentStatus)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(UpdateDeploymentStatus)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DeploymentDetails)
+        RETURNVAR: sarvam_voice_agents_workspace_status_update1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.status.update1
+  sarvam_voice_agents.workspace.cohorts.upload1:
+    SUMMARY: Upload Cohort
+    DESC: |-
+      Upload a cohort of users for a deployment. When a known user calls in, the agent receives their personalized variables (name, balance, language, etc.) for a tailored conversation.
+
+      Upload as multipart form-data with three fields:
+      - `name` — Cohort name (1–50 characters)
+      - `cohort_file` — CSV file with a header row and user data
+      - `cohort_transformation_file` — JSON file that maps CSV columns to phone numbers and agent variables
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}/cohorts/upload
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - name:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: body
+      - cohort_file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+      - cohort_transformation_file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+    RETURNS:
+      - RETURNTYPE: STRUCT(CohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_upload1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.upload1
+  sarvam_voice_agents.workspace.cohorts.get2:
+    SUMMARY: List Cohorts
+    DESC: List all cohorts belonging to a deployment with pagination, sorting, and search.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}/cohorts
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 10
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - search:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedCohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_get2
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.get2
+  sarvam_voice_agents.workspace.cohorts.get3:
+    SUMMARY: Get Cohort
+    DESC: Get metadata for a specific cohort including its processing status and result counts (total records, valid, rejected).
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}/cohorts/{cohort_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - cohort_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+    RETURNS:
+      - RETURNTYPE: STRUCT(CohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_get3
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.get3
+  sarvam_voice_agents.workspace.files.get1:
+    SUMMARY: Download Cohort File
+    DESC: |-
+      Download a file associated with a cohort.
+
+      **Available file types:**
+      - `cohort` — The original uploaded CSV
+      - `rejected_records` — CSV of rows that failed validation, with an appended `rejected_reason` column
+      - `cohort_transformation` — The JSON transformation config used during processing
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/deployments/{deployment_id}/cohorts/{cohort_id}/files
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - deployment_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - cohort_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - file_type:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: ANY
+        RETURNVAR: sarvam_voice_agents_workspace_files_get1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.files.get1
+  sarvam_voice_agents.workspace.campaigns.create:
+    SUMMARY: Create Campaign
+    DESC: |-
+      Create a new campaign that ties an agent to a schedule, rate, and retry policy.
+
+      The campaign will be created in `scheduled` status. It starts automatically when `start_timestamp` is reached.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(CreateCampaign)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(CreateCampaign)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(CampaignMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_campaigns_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.campaigns.create
+  sarvam_voice_agents.workspace.campaigns.get:
+    SUMMARY: List Campaigns
+    DESC: List campaigns in the workspace with optional filtering by status, search, sorting, and pagination.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_status:
+          TYPE: STRUCT(list_campaigns_1e9f6921_get_v1_orgs_org_id_workspaces_workspace_id_campaigns_26880795Param_campaign_status)
+          REQUIRED: false
+          LOCATION: query
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 10
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: created_at
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: desc
+      - search:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedCampaignMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_campaigns_get
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.campaigns.get
+  sarvam_voice_agents.workspace.campaigns.get1:
+    SUMMARY: Get Campaign
+    DESC: Get full details of a campaign including its agent configuration, schedule, and retry policy.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+    RETURNS:
+      - RETURNTYPE: STRUCT(CampaignDetail)
+        RETURNVAR: sarvam_voice_agents_workspace_campaigns_get1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.campaigns.get1
+  sarvam_voice_agents.workspace.campaigns.update:
+    SUMMARY: Update Campaign
+    DESC: |-
+      Update a campaign's configuration. Only allowed when the campaign is in `paused` or `scheduled` status.
+
+      You can update the name, description, agent configuration, end timestamp, and allowed schedule.
+    HTTP:
+      METHOD: PATCH
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(UpdateCampaign)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(UpdateCampaign)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(CampaignMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_campaigns_update
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.campaigns.update
+  sarvam_voice_agents.workspace.status.update:
+    SUMMARY: Update Campaign Status
+    DESC: Change the status of a campaign by sending a `pause`, `resume`, or `cancel` action.
+    HTTP:
+      METHOD: PUT
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}/status
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(UpdateCampaignStatus)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(UpdateCampaignStatus)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(CampaignMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_status_update
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.status.update
+  sarvam_voice_agents.workspace.cohorts.upload:
+    SUMMARY: Upload Cohort
+    DESC: |-
+      Upload a cohort as multipart form-data with three fields:
+
+      - `name` — Cohort name (1–50 characters)
+      - `cohort_file` — CSV file with a header row and at least one data row
+      - `cohort_transformation_file` — JSON file that maps CSV columns to phone numbers and agent variables
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}/cohorts/upload
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - name:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: body
+      - cohort_file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+      - cohort_transformation_file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+    RETURNS:
+      - RETURNTYPE: STRUCT(CohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_upload
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.upload
+  sarvam_voice_agents.workspace.cohorts.get:
+    SUMMARY: List Cohorts
+    DESC: List all cohorts belonging to a campaign with pagination, sorting, and search.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}/cohorts
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 10
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: created_at
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: desc
+      - search:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedCohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_get
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.get
+  sarvam_voice_agents.workspace.cohorts.get1:
+    SUMMARY: Get Cohort
+    DESC: Get metadata for a specific cohort, including its processing status and result counts (total, valid, and rejected records).
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}/cohorts/{cohort_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - cohort_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+    RETURNS:
+      - RETURNTYPE: STRUCT(CohortMetadata)
+        RETURNVAR: sarvam_voice_agents_workspace_cohorts_get1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.cohorts.get1
+  sarvam_voice_agents.workspace.files.get:
+    SUMMARY: Download Cohort File
+    DESC: |-
+      Download a file associated with a cohort.
+
+      **Available file types:**
+      - `cohort` — The original uploaded CSV
+      - `rejected_records` — CSV of rows that failed validation, with an appended `rejected_reason` column
+      - `cohort_transformation` — The JSON transformation config used during processing
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/campaigns/{campaign_id}/cohorts/{cohort_id}/files
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - campaign_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - cohort_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - file_type:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: query
+    RETURNS:
+      - RETURNTYPE: ANY
+        RETURNVAR: sarvam_voice_agents_workspace_files_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.files.get
+  sarvam_voice_agents.workspace.outbounds.create:
+    SUMMARY: Initiate Outbound Api
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/orgs/{org_id}/workspaces/{workspace_id}/outbounds
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(OutboundRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - body:
+          TYPE: STRUCT(OutboundRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(OutboundResponse)
+        RETURNVAR: sarvam_voice_agents_workspace_outbounds_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(HTTPValidationError)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.workspace.outbounds.create
+  sarvam_voice_agents.attempt.get:
+    SUMMARY: Get attempts
+    DESC: Fetch paginated attempts with filtering and sorting options
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /analytics/v1/{org_id}/{workspace_id}/{app_id}/attempts
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - app_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - start_datetime:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: query
+          FORMAT: date-time
+      - end_datetime:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: query
+          FORMAT: date-time
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 20
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - filter_conditions:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - X-API-Key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedResponse_ExternalAttemptsAPIResponse_)
+        RETURNVAR: sarvam_voice_agents_attempt_get
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(HTTPValidationError)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.attempt.get
+  sarvam_voice_agents.interaction.get:
+    SUMMARY: Get interactions
+    DESC: Fetch paginated interactions with filtering and sorting options
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /analytics/v1/{org_id}/{workspace_id}/{app_id}/interactions
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - app_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - sort_by:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - sort_order:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - start_datetime:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: query
+          FORMAT: date-time
+      - end_datetime:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: query
+          FORMAT: date-time
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 20
+      - offset:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 0
+      - filter_conditions:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - X-API-Key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(PaginatedResponse_ExternalInteractionsAPIResponse_)
+        RETURNVAR: sarvam_voice_agents_interaction_get
+        STATUS: 200
+        PAGINATION:
+          TYPE: offset
+          OFFSET_FIELD: offset
+    ERRORS:
+      - TYPE: STRUCT(HTTPValidationError)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.interaction.get
+  sarvam_voice_agents.recording.get:
+    SUMMARY: Get recordings
+    DESC: Fetch recording for a specific interaction
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /analytics/v1/{org_id}/{workspace_id}/{app_id}/recordings/{interaction_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - app_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - interaction_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - X-API-Key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(external_endpoints_getRecordingsApi_Response_200)
+        RETURNVAR: sarvam_voice_agents_recording_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(HTTPValidationError)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.recording.get
+  sarvam_voice_agents.transcript.get:
+    SUMMARY: Get transcripts
+    DESC: Fetch transcript for a specific interaction
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /analytics/v1/{org_id}/{workspace_id}/{app_id}/transcripts/{interaction_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - org_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - workspace_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - app_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - interaction_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - X-API-Key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(external_endpoints_getTranscriptsApi_Response_200)
+        RETURNVAR: sarvam_voice_agents_transcript_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(HTTPValidationError)
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_voice_agents.transcript.get
+  sarvam_voice_agents.auth.create:
+    SUMMARY: Obtain a JWT Access Token
+    DESC: |
+      If using the Client Credentials method, Samvaad will call this endpoint to exchange its **Client ID** and **Client Secret** for a short-lived JWT Bearer token.
+
+      Samvaad will authenticate to this endpoint using **HTTP Basic Authentication**. The returned access token will be cached and used in the `Authorization` header for all subsequent API calls until it expires.
+
+      **Note:** This endpoint is not needed if you opt for the static API Key authentication method.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /auth
+      HEADERS:
+        Content-Type: application/json
+        Authorization: bearer_token
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(obtainAJwtAccessToken_post_auth_b88b1a6Request)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - Authorization:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - x-request-id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: uuid
+      - x-trace-id:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          FORMAT: uuid
+      - x-request-timestamp:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: date-time
+      - body:
+          TYPE: STRUCT(obtainAJwtAccessToken_post_auth_b88b1a6Request)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(AuthSuccessResponse)
+        RETURNVAR: sarvam_voice_agents_auth_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 400
+        WHEN: Bad Request. The request is syntactically malformed. (HTTP 400)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 401
+        WHEN: Unauthorized. The provided Client ID or Client Secret is invalid. (HTTP 401)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Unprocessable Entity. The request is well-formed but contains semantic errors (e.g., wrong grant_type). (HTTP 422)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 500
+        WHEN: Internal Server Error. An unexpected error occurred on the authentication server. (HTTP 500)
+    CANONICAL_ID: sarvam_voice_agents.auth.create
+  sarvam_voice_agents.decrypt_key.create:
+    SUMMARY: Decrypt an Encrypted Data Encryption Key (DEK)
+    DESC: |
+      Samvaad calls this endpoint to decrypt an Encrypted Data Encryption Key (EDEK) using the corresponding master key in your Key Management System (KMS) or HSM.
+
+      The plaintext key is then cached securely in memory by Samvaad for a short, configurable duration to perform data encryption and decryption operations. The `key_alias` is used to identify which master key should be used for decryption.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /decrypt-key
+      HEADERS:
+        Content-Type: application/json
+        Authorization: bearer_token
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(decryptAnEncryptedDataEncryptionKeyDek_post_decrypt_key_b6f99225Request)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - Authorization:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - x-request-id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: uuid
+      - x-trace-id:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          FORMAT: uuid
+      - x-request-timestamp:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: date-time
+      - body:
+          TYPE: STRUCT(decryptAnEncryptedDataEncryptionKeyDek_post_decrypt_key_b6f99225Request)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DecryptKeySuccessResponse)
+        RETURNVAR: sarvam_voice_agents_decrypt-key_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 400
+        WHEN: Bad Request. The request body is syntactically malformed. (HTTP 400)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 401
+        WHEN: Unauthorized. The Bearer token is missing, invalid, or expired. (HTTP 401)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 404
+        WHEN: Not Found. The specified `key_alias` does not exist or is not active in your KMS. (HTTP 404)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Unprocessable Entity. The request is well-formed but contains semantic errors. (HTTP 422)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 500
+        WHEN: Internal Server Error. An unexpected error occurred within your key management infrastructure (e.g., KMS, HSM). (HTTP 500)
+    CANONICAL_ID: sarvam_voice_agents.decrypt-key.create
+  sarvam_voice_agents.rotate_key.create:
+    SUMMARY: Generate a New Data Encryption Key (DEK)
+    DESC: |
+      Samvaad calls this endpoint to generate a new Data Encryption Key (DEK). This is part of the key rotation strategy.
+      You must return both the new plaintext DEK and its encrypted form (the EDEK) along with the key-alias used for encyption. Samvaad will use this new key for all subsequent encryption operations for the associated data.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /rotate-key
+      HEADERS:
+        Content-Type: application/json
+        Authorization: bearer_token
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - Authorization:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - x-request-id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: uuid
+      - x-trace-id:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          FORMAT: uuid
+      - x-request-timestamp:
+          TYPE: TIMESTAMP
+          REQUIRED: true
+          LOCATION: header
+          FORMAT: date-time
+    RETURNS:
+      - RETURNTYPE: STRUCT(RotateKeySuccessResponse)
+        RETURNVAR: sarvam_voice_agents_rotate-key_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 400
+        WHEN: Bad Request. The request body is syntactically malformed. (HTTP 400)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 401
+        WHEN: Unauthorized. The Bearer token is missing, invalid, or expired. (HTTP 401)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 422
+        WHEN: Unprocessable Entity. The request is well-formed but contains semantic errors. (HTTP 422)
+      - TYPE: STRUCT(ErrorResponse)
+        STATUS: 500
+        WHEN: Internal Server Error. An unexpected error occurred within your key management infrastructure during key generation. (HTTP 500)
+    CANONICAL_ID: sarvam_voice_agents.rotate-key.create
+STRUCTS:
+  ConnectionConfig:
+    - name: connection_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: agent_phone_number
+      TYPE: STRING
+      REQUIRED: true
+  InboundConfig:
+    - name: start_time
+      TYPE: TIME
+      REQUIRED: true
+      FORMAT: time
+      comment: Start time in HH:MM 24-hour format
+    - name: end_time
+      TYPE: TIME
+      REQUIRED: true
+      FORMAT: time
+      comment: End time in HH:MM 24-hour format
+    - name: allowed_days
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: Days of the week when inbound calls are accepted
+    - name: timezone
+      TYPE: STRING
+      REQUIRED: false
+      FORMAT: zoneinfo
+      DEFAULT: Asia/Kolkata
+      comment: IANA timezone, e.g. 'Asia/Kolkata', 'UTC', 'America/New_York'
+  CreateDeployment_inbound_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_InboundConfig
+      TYPE: STRUCT(InboundConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateDeployment:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: Deployment name. Alphanumeric, hyphens, underscores and spaces allowed. Max 50 characters.
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional deployment description. Max 150 characters.
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the agent to deploy
+    - name: connection_configs
+      TYPE: "[]STRUCT(ConnectionConfig)"
+      REQUIRED: true
+      comment: Telephony connection configurations with phone numbers
+    - name: inbound_config
+      TYPE: STRUCT(CreateDeployment_inbound_config)
+      REQUIRED: false
+      comment: Optional inbound call schedule configuration
+  DeploymentDetails_status:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_DeploymentStatus
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  DeploymentDetails_inbound_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_InboundConfig
+      TYPE: STRUCT(InboundConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  DeploymentDetails:
+    - name: name
+      TYPE: STRING
+      REQUIRED: false
+      comment: Name of the deployment
+    - name: deployment_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the deployment
+    - name: status
+      TYPE: STRUCT(DeploymentDetails_status)
+      REQUIRED: false
+      comment: Current status of the deployment
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional description
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the agent
+    - name: connection_configs
+      TYPE: "[]STRUCT(ConnectionConfig)"
+      REQUIRED: true
+      comment: Telephony connection configurations
+    - name: channel_direction
+      TYPE: STRING
+      REQUIRED: true
+      comment: Direction of calls (inbound, outbound, or both)
+    - name: inbound_config
+      TYPE: STRUCT(DeploymentDetails_inbound_config)
+      REQUIRED: false
+      comment: Inbound call schedule configuration
+    - name: created_by
+      TYPE: STRING
+      REQUIRED: true
+      comment: User who created this deployment
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when created (ISO 8601)
+    - name: updated_by
+      TYPE: STRING
+      REQUIRED: false
+      comment: User who last updated this deployment
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when last updated (ISO 8601)
+  ErrorBody:
+    - name: code
+      TYPE: STRING
+      REQUIRED: true
+      comment: A service-specific error code.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: A human-readable description of the error.
+  ErrorResponse:
+    - name: error
+      TYPE: STRUCT(ErrorBody)
+      REQUIRED: true
+  DeploymentRecord_status:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_DeploymentStatus
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  DeploymentRecord_inbound_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_InboundConfig
+      TYPE: STRUCT(InboundConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  DeploymentRecord:
+    - name: name
+      TYPE: STRING
+      REQUIRED: false
+      comment: Name of the deployment
+    - name: deployment_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the deployment
+    - name: status
+      TYPE: STRUCT(DeploymentRecord_status)
+      REQUIRED: false
+      comment: Current status of the deployment
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional description
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the agent
+    - name: phone_numbers
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: Phone numbers assigned to this deployment
+    - name: channel_direction
+      TYPE: STRING
+      REQUIRED: true
+      comment: Direction of calls
+    - name: inbound_config
+      TYPE: STRUCT(DeploymentRecord_inbound_config)
+      REQUIRED: false
+      comment: Inbound call schedule configuration
+    - name: created_by
+      TYPE: STRING
+      REQUIRED: true
+      comment: User who created this deployment
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when created (ISO 8601)
+    - name: updated_by
+      TYPE: STRING
+      REQUIRED: false
+      comment: User who last updated this deployment
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when last updated (ISO 8601)
+  PaginatedDeploymentRecord:
+    - name: items
+      TYPE: "[]STRUCT(DeploymentRecord)"
+      REQUIRED: true
+      comment: List of deployments on this page
+    - name: total
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of deployments matching the query
+    - name: limit
+      TYPE: INT
+      REQUIRED: true
+      comment: Maximum number of items per page
+    - name: offset
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of items skipped
+    - name: next_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the next page, or null if this is the last page
+    - name: prev_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the previous page, or null if this is the first page
+  UpdateDeployment_inbound_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_InboundConfig
+      TYPE: STRUCT(InboundConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  UpdateDeployment:
+    - name: name
+      TYPE: STRING
+      REQUIRED: false
+      comment: Updated deployment name
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Updated deployment description
+    - name: app_version
+      TYPE: INT
+      REQUIRED: false
+      comment: Updated agent version
+    - name: connection_configs
+      TYPE: ANY
+      REQUIRED: false
+      comment: Updated telephony connections
+    - name: inbound_config
+      TYPE: STRUCT(UpdateDeployment_inbound_config)
+      REQUIRED: false
+      comment: Updated inbound call schedule
+  UpdateDeploymentStatus:
+    - name: action
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Action to perform: `pause` or `resume`"
+  CohortResult:
+    - name: total_records
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of records in the uploaded file
+    - name: valid_records
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of records that passed validation
+    - name: rejected_records
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of records that failed validation
+  CohortMetadata_result:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_CohortResult
+      TYPE: STRUCT(CohortResult)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CohortMetadata:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: Name of the resource
+    - name: cohort_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the cohort
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current status
+    - name: source_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: How the cohort was uploaded
+    - name: result
+      TYPE: STRUCT(CohortMetadata_result)
+      REQUIRED: false
+      comment: Processing result with record counts
+    - name: created_by
+      TYPE: STRING
+      REQUIRED: true
+      comment: User who created this resource
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was created (ISO 8601)
+    - name: updated_by
+      TYPE: STRING
+      REQUIRED: false
+      comment: User who last updated this resource
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was last updated (ISO 8601)
+  PaginatedCohortMetadata:
+    - name: items
+      TYPE: "[]STRUCT(CohortMetadata)"
+      REQUIRED: true
+      comment: List of cohorts on this page
+    - name: total
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of cohorts matching the query
+    - name: limit
+      TYPE: INT
+      REQUIRED: true
+      comment: Maximum number of items per page
+    - name: offset
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of items skipped
+    - name: next_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the next page, or null if this is the last page
+    - name: prev_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the previous page, or null if this is the first page
+  BaseRetryConfig:
+    - name: enabled
+      TYPE: BOOL
+      REQUIRED: true
+      comment: Whether this retry condition is enabled
+  ShortDurationRetryConfig:
+    - name: enabled
+      TYPE: BOOL
+      REQUIRED: true
+      comment: Whether short duration retry is enabled
+    - name: threshold_seconds
+      TYPE: INT
+      REQUIRED: true
+      DEFAULT: 30
+      comment: Calls shorter than this duration (in seconds) will be retried
+  ErrorRetryConfig:
+    - name: enabled
+      TYPE: BOOL
+      REQUIRED: true
+      comment: Whether error retry is enabled
+    - name: max_retries
+      TYPE: INT
+      REQUIRED: true
+      DEFAULT: 3
+      comment: Maximum number of retries for this error type (1 to 20)
+    - name: retry_interval_minutes
+      TYPE: INT
+      REQUIRED: true
+      DEFAULT: 5
+      comment: Minutes to wait between retries (minimum 5)
+  RetryOnConfig_busy:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_BaseRetryConfig
+      TYPE: STRUCT(BaseRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig_failed:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_BaseRetryConfig
+      TYPE: STRUCT(BaseRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig_no_answer:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_BaseRetryConfig
+      TYPE: STRUCT(BaseRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig_short_duration:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ShortDurationRetryConfig
+      TYPE: STRUCT(ShortDurationRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig_provider_error:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ErrorRetryConfig
+      TYPE: STRUCT(ErrorRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig_internal_error:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ErrorRetryConfig
+      TYPE: STRUCT(ErrorRetryConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  RetryOnConfig:
+    - name: busy
+      TYPE: STRUCT(RetryOnConfig_busy)
+      REQUIRED: false
+      comment: Retry when the line is busy
+    - name: failed
+      TYPE: STRUCT(RetryOnConfig_failed)
+      REQUIRED: false
+      comment: Retry when the call fails
+    - name: no_answer
+      TYPE: STRUCT(RetryOnConfig_no_answer)
+      REQUIRED: false
+      comment: Retry when there is no answer
+    - name: short_duration
+      TYPE: STRUCT(RetryOnConfig_short_duration)
+      REQUIRED: false
+      comment: Retry when the call duration is below a threshold
+    - name: provider_error
+      TYPE: STRUCT(RetryOnConfig_provider_error)
+      REQUIRED: false
+      comment: Retry on telephony provider errors
+    - name: internal_error
+      TYPE: STRUCT(RetryOnConfig_internal_error)
+      REQUIRED: false
+      DEFAULT:
+        enabled: true
+        max_retries: 3
+        retry_interval_minutes: 5
+      comment: Retry on internal system errors
+  RetryConfigInputRetryIntervalMinutes:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: INT
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "[]INT"
+      REQUIRED: false
+  RetryConfig_Input_4bf223ae:
+    - name: max_retries
+      TYPE: INT
+      REQUIRED: true
+      comment: Maximum number of retry attempts (0 to 20)
+    - name: retry_on
+      TYPE: STRUCT(RetryOnConfig)
+      REQUIRED: false
+      comment: Conditions that trigger a retry
+    - name: retry_interval_minutes
+      TYPE: STRUCT(RetryConfigInputRetryIntervalMinutes)
+      REQUIRED: false
+      comment: Minutes to wait between retries. Can be a single value or an array for variable intervals.
+  WebhookConfig:
+    - name: url
+      TYPE: STRING
+      REQUIRED: true
+    - name: metadata
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+  AgentConfig_Input_98d8e907_webhook_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_WebhookConfig
+      TYPE: STRUCT(WebhookConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  AgentConfig_Input_98d8e907:
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the agent to use
+    - name: app_type
+      TYPE: STRING
+      REQUIRED: false
+      ENUM:
+        - agent
+      DEFAULT: agent
+      comment: Always `agent`
+    - name: attempts_per_second
+      TYPE: FLOAT
+      REQUIRED: true
+      FORMAT: double
+      comment: "Rate of outbound call attempts (dials) per second. Every dial counts — initial calls and retries alike. Range: 0.1–500."
+    - name: connection_configs
+      TYPE: "[]STRUCT(ConnectionConfig)"
+      REQUIRED: true
+      comment: Telephony connection configurations with phone numbers
+    - name: retry_config
+      TYPE: STRUCT(RetryConfig_Input_4bf223ae)
+      REQUIRED: true
+      comment: Retry configuration for failed or unanswered calls
+    - name: webhook_config
+      TYPE: STRUCT(AgentConfig_Input_98d8e907_webhook_config)
+      REQUIRED: false
+      comment: Optional webhook to receive call completion events
+  CreateCampaignAppConfig:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_AgentConfig_Input_98d8e907
+      TYPE: STRUCT(AgentConfig_Input_98d8e907)
+      REQUIRED: false
+  AllowedScheduleConfig:
+    - name: timezone
+      TYPE: STRING
+      REQUIRED: false
+      FORMAT: zoneinfo
+      comment: IANA timezone, e.g. 'Asia/Kolkata', 'UTC', 'America/New_York'
+    - name: allowed_start_time
+      TYPE: STRING
+      REQUIRED: true
+      comment: Start time in HH:MM 24-hour format
+    - name: allowed_end_time
+      TYPE: STRING
+      REQUIRED: true
+      comment: End time in HH:MM 24-hour format
+    - name: allowed_days
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: Days of the week when the campaign can run
+  CreateCampaign:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional campaign description. Max 150 characters.
+    - name: app_config
+      TYPE: STRUCT(CreateCampaignAppConfig)
+      REQUIRED: true
+      comment: Agent configuration for the campaign
+    - name: start_timestamp
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Campaign start time (ISO 8601)
+    - name: end_timestamp
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Campaign end time (ISO 8601)
+    - name: allowed_schedule
+      TYPE: STRUCT(AllowedScheduleConfig)
+      REQUIRED: true
+      comment: Schedule constraints for when the campaign can run
+  CampaignMetadata:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: Name of the resource
+    - name: campaign_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the campaign
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current status
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional description
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_type
+      TYPE: STRING
+      REQUIRED: false
+      comment: Type of agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: false
+      comment: Version of the agent to use
+    - name: created_by
+      TYPE: STRING
+      REQUIRED: true
+      comment: User who created this resource
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was created (ISO 8601)
+    - name: updated_by
+      TYPE: STRING
+      REQUIRED: false
+      comment: User who last updated this resource
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was last updated (ISO 8601)
+  PaginatedCampaignMetadata:
+    - name: items
+      TYPE: "[]STRUCT(CampaignMetadata)"
+      REQUIRED: true
+      comment: List of campaigns on this page
+    - name: total
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of campaigns matching the query
+    - name: limit
+      TYPE: INT
+      REQUIRED: true
+      comment: Maximum number of items per page
+    - name: offset
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of items skipped
+    - name: next_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the next page, or null if this is the last page
+    - name: prev_page_uri
+      TYPE: STRING
+      REQUIRED: false
+      comment: URI to fetch the previous page, or null if this is the first page
+  RetryConfigOutputRetryIntervalMinutes:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: INT
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "[]INT"
+      REQUIRED: false
+  RetryConfig_Output_d8b6558f:
+    - name: max_retries
+      TYPE: INT
+      REQUIRED: true
+      comment: Maximum number of retry attempts (0 to 20)
+    - name: retry_on
+      TYPE: STRUCT(RetryOnConfig)
+      REQUIRED: false
+      comment: Conditions that trigger a retry
+    - name: retry_interval_minutes
+      TYPE: STRUCT(RetryConfigOutputRetryIntervalMinutes)
+      REQUIRED: false
+      comment: Minutes to wait between retries. Can be a single value or an array for variable intervals.
+  AgentConfig_Output_c275c608_webhook_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_WebhookConfig
+      TYPE: STRUCT(WebhookConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  AgentConfig_Output_c275c608:
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the agent to use
+    - name: app_type
+      TYPE: STRING
+      REQUIRED: false
+      ENUM:
+        - agent
+      DEFAULT: agent
+      comment: Always `agent`
+    - name: attempts_per_second
+      TYPE: FLOAT
+      REQUIRED: true
+      FORMAT: double
+      comment: "Rate of outbound call attempts (dials) per second. Every dial counts — initial calls and retries alike. Range: 0.1–500."
+    - name: connection_configs
+      TYPE: "[]STRUCT(ConnectionConfig)"
+      REQUIRED: true
+      comment: Telephony connection configurations with phone numbers
+    - name: retry_config
+      TYPE: STRUCT(RetryConfig_Output_d8b6558f)
+      REQUIRED: true
+      comment: Retry configuration for failed or unanswered calls
+    - name: webhook_config
+      TYPE: STRUCT(AgentConfig_Output_c275c608_webhook_config)
+      REQUIRED: false
+      comment: Optional webhook to receive call completion events
+  CampaignDetailAppConfig:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_AgentConfig_Output_c275c608
+      TYPE: STRUCT(AgentConfig_Output_c275c608)
+      REQUIRED: false
+  CampaignDetail:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: Name of the resource
+    - name: campaign_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the campaign
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current status
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Optional description
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: ID of the agent
+    - name: app_type
+      TYPE: STRING
+      REQUIRED: false
+      comment: Type of agent
+    - name: app_version
+      TYPE: INT
+      REQUIRED: false
+      comment: Version of the agent to use
+    - name: created_by
+      TYPE: STRING
+      REQUIRED: true
+      comment: User who created this resource
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was created (ISO 8601)
+    - name: updated_by
+      TYPE: STRING
+      REQUIRED: false
+      comment: User who last updated this resource
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Timestamp when the resource was last updated (ISO 8601)
+    - name: app_config
+      TYPE: STRUCT(CampaignDetailAppConfig)
+      REQUIRED: true
+      comment: Agent configuration for the campaign
+    - name: start_timestamp
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Campaign start time (ISO 8601)
+    - name: end_timestamp
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Campaign end time (ISO 8601)
+    - name: allowed_schedule
+      TYPE: STRUCT(AllowedScheduleConfig)
+      REQUIRED: true
+      comment: Schedule constraints for when the campaign can run
+  UpdateCampaign_app_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_AgentConfig_Input_98d8e907
+      TYPE: STRUCT(AgentConfig_Input_98d8e907)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  UpdateCampaign_allowed_schedule:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_AllowedScheduleConfig
+      TYPE: STRUCT(AllowedScheduleConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  UpdateCampaign:
+    - name: name
+      TYPE: STRING
+      REQUIRED: false
+      comment: Updated campaign name. Alphanumeric, hyphens, underscores and spaces allowed. Max 50 characters.
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: Updated campaign description. Max 150 characters.
+    - name: app_config
+      TYPE: STRUCT(UpdateCampaign_app_config)
+      REQUIRED: false
+      comment: Updated agent configuration
+    - name: end_timestamp
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+      comment: Updated campaign end time (ISO 8601)
+    - name: allowed_schedule
+      TYPE: STRUCT(UpdateCampaign_allowed_schedule)
+      REQUIRED: false
+      comment: Updated schedule constraints
+  UpdateCampaignStatus:
+    - name: action
+      TYPE: STRING
+      REQUIRED: true
+      comment: The new status to set for the campaign
+  OutboundAppOverrides_initial_language_name:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_LanguageName
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  OutboundAppOverrides:
+    - name: initial_bot_message
+      TYPE: STRING
+      REQUIRED: false
+    - name: initial_state_name
+      TYPE: STRING
+      REQUIRED: false
+    - name: initial_language_name
+      TYPE: STRUCT(OutboundAppOverrides_initial_language_name)
+      REQUIRED: false
+  OutboundAgentConfig_app_overrides:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_OutboundAppOverrides
+      TYPE: STRUCT(OutboundAppOverrides)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  OutboundAgentConfig:
+    - name: app_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: app_version
+      TYPE: INT
+      REQUIRED: true
+    - name: connection_config
+      TYPE: STRUCT(ConnectionConfig)
+      REQUIRED: true
+    - name: agent_variables
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+    - name: app_type
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: agent
+    - name: app_overrides
+      TYPE: STRUCT(OutboundAgentConfig_app_overrides)
+      REQUIRED: false
+  UserConfig:
+    - name: user_phone_number
+      TYPE: STRING
+      REQUIRED: true
+  OutboundRequest_webhook_config:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_WebhookConfig
+      TYPE: STRUCT(WebhookConfig)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  OutboundRequest:
+    - name: app_config
+      TYPE: STRUCT(OutboundAgentConfig)
+      REQUIRED: true
+    - name: user_config
+      TYPE: STRUCT(UserConfig)
+      REQUIRED: true
+    - name: webhook_config
+      TYPE: STRUCT(OutboundRequest_webhook_config)
+      REQUIRED: false
+  OutboundResponse:
+    - name: attempt_id
+      TYPE: STRING
+      REQUIRED: true
+  ValidationErrorLocItems:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: INT
+      REQUIRED: false
+  ValidationError:
+    - name: loc
+      TYPE: "[]STRUCT(ValidationErrorLocItems)"
+      REQUIRED: true
+    - name: msg
+      TYPE: STRING
+      REQUIRED: true
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+  HTTPValidationError:
+    - name: detail
+      TYPE: "[]STRUCT(ValidationError)"
+      REQUIRED: false
+  ExternalAttemptsAPIResponse:
+    - name: attempt_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: interaction_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: user_identifier
+      TYPE: STRING
+      REQUIRED: false
+    - name: connectivity_status
+      TYPE: STRING
+      REQUIRED: false
+    - name: failure_reason
+      TYPE: STRING
+      REQUIRED: false
+    - name: ended_by
+      TYPE: STRING
+      REQUIRED: false
+    - name: duration_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+    - name: start_datetime
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+    - name: end_datetime
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+    - name: language_name
+      TYPE: STRING
+      REQUIRED: false
+    - name: num_messages
+      TYPE: INT
+      REQUIRED: false
+    - name: average_agent_response_time_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+    - name: average_user_response_time_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+    - name: user_contact_masked
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_direction
+      TYPE: STRING
+      REQUIRED: false
+    - name: retry_attempt
+      TYPE: INT
+      REQUIRED: false
+    - name: campaign_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: cohort_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: user_contact_hashed
+      TYPE: STRING
+      REQUIRED: false
+    - name: is_debug_call
+      TYPE: INT
+      REQUIRED: false
+    - name: audio_url
+      TYPE: STRING
+      REQUIRED: false
+    - name: server_retry_attempt
+      TYPE: INT
+      REQUIRED: false
+    - name: has_log_issues
+      TYPE: INT
+      REQUIRED: false
+    - name: channel_provider
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_protocol
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_type
+      TYPE: STRING
+      REQUIRED: false
+    - name: agent_variables
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+  PaginatedResponse_ExternalAttemptsAPIResponse_:
+    - name: items
+      TYPE: "[]STRUCT(ExternalAttemptsAPIResponse)"
+      REQUIRED: true
+    - name: total
+      TYPE: INT
+      REQUIRED: true
+    - name: limit
+      TYPE: INT
+      REQUIRED: true
+    - name: offset
+      TYPE: INT
+      REQUIRED: true
+    - name: next_page_uri
+      TYPE: STRING
+      REQUIRED: false
+    - name: prev_page_uri
+      TYPE: STRING
+      REQUIRED: false
+  ExternalInteractionsAPIResponse:
+    - name: interaction_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: user_identifier
+      TYPE: STRING
+      REQUIRED: false
+    - name: duration_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+    - name: start_datetime
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+    - name: end_datetime
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+    - name: language_name
+      TYPE: STRING
+      REQUIRED: false
+    - name: num_messages
+      TYPE: INT
+      REQUIRED: false
+    - name: average_agent_response_time_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+    - name: average_user_response_time_in_seconds
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+    - name: user_contact_masked
+      TYPE: STRING
+      REQUIRED: false
+    - name: user_contact_hashed
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_direction
+      TYPE: STRING
+      REQUIRED: false
+    - name: retry_attempt
+      TYPE: INT
+      REQUIRED: false
+    - name: campaign_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: cohort_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: is_debug_call
+      TYPE: INT
+      REQUIRED: false
+    - name: audio_url
+      TYPE: STRING
+      REQUIRED: false
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_type
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_provider
+      TYPE: STRING
+      REQUIRED: false
+    - name: channel_protocol
+      TYPE: STRING
+      REQUIRED: false
+    - name: server_retry_attempt
+      TYPE: INT
+      REQUIRED: false
+    - name: failure_reason
+      TYPE: STRING
+      REQUIRED: false
+    - name: ended_by
+      TYPE: STRING
+      REQUIRED: false
+    - name: has_log_issues
+      TYPE: INT
+      REQUIRED: false
+    - name: agent_variables
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+  PaginatedResponse_ExternalInteractionsAPIResponse_:
+    - name: items
+      TYPE: "[]STRUCT(ExternalInteractionsAPIResponse)"
+      REQUIRED: true
+    - name: total
+      TYPE: INT
+      REQUIRED: true
+    - name: limit
+      TYPE: INT
+      REQUIRED: true
+    - name: offset
+      TYPE: INT
+      REQUIRED: true
+    - name: next_page_uri
+      TYPE: STRING
+      REQUIRED: false
+    - name: prev_page_uri
+      TYPE: STRING
+      REQUIRED: false
+  external_endpoints_getRecordingsApi_Response_200:
+    - name: value
+      TYPE: ANY
+      REQUIRED: false
+  external_endpoints_getTranscriptsApi_Response_200:
+    - name: value
+      TYPE: ANY
+      REQUIRED: false
+  AuthBody:
+    - name: access_token
+      TYPE: STRING
+      REQUIRED: true
+      comment: The JWT access token for authorizing subsequent requests.
+    - name: token_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: The type of token. Must always be 'Bearer'.
+    - name: expires_in
+      TYPE: INT
+      REQUIRED: true
+      comment: The lifetime in seconds of the access token from the time of issuance.
+  AuthSuccessResponse:
+    - name: data
+      TYPE: STRUCT(AuthBody)
+      REQUIRED: true
+  DecryptKeyRequest:
+    - name: key_alias
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique alias/identifier for the master key in your KMS that was used to encrypt the key.
+    - name: encrypted_key
+      TYPE: STRING
+      REQUIRED: true
+      comment: |
+        The Base64 encoded, encrypted Data Encryption Key (EDEK).
+        The value will be prefixed with a version marker, e.g., `byok:v1:`. Your service should be prepared to handle this format.
+  DecryptKeyBody:
+    - name: plaintext_key
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: byte
+      comment: The Base64 encoded plaintext (decrypted) Data Encryption Key (DEK).
+  DecryptKeySuccessResponse:
+    - name: data
+      TYPE: STRUCT(DecryptKeyBody)
+      REQUIRED: true
+  RotateKeyBody:
+    - name: encrypted_dek
+      TYPE: STRING
+      REQUIRED: true
+      comment: The new Base64 encoded Data Encryption Key (DEK), encrypted with the master key.
+    - name: key_alias
+      TYPE: STRING
+      REQUIRED: true
+      comment: The alias of the master key that was used for encryption, confirming which key was used.
+    - name: plaintext_dek
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: byte
+      comment: The new Base64 encoded plaintext Data Encryption Key (DEK).
+  RotateKeySuccessResponse:
+    - name: data
+      TYPE: STRUCT(RotateKeyBody)
+      REQUIRED: true
+  list_campaigns_1e9f6921_get_v1_orgs_org_id_workspaces_workspace_id_campaigns_26880795Param_campaign_status:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_CampaignStatus
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  obtainAJwtAccessToken_post_auth_b88b1a6Request:
+    - name: grant_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: The OAuth2 grant type. Must be `client_credentials`.
+  decryptAnEncryptedDataEncryptionKeyDek_post_decrypt_key_b6f99225Request:
+    - name: data
+      TYPE: STRUCT(DecryptKeyRequest)
+      REQUIRED: true

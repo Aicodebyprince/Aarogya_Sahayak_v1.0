@@ -7,6 +7,7 @@ from app.integrations.adapters import (
     n8n_adapter, abdm_adapter
 )
 from app.integrations.google_maps import google_maps_adapter, GoogleMapsAdapter
+from app.integrations.swytchcode import swytchcode_adapter, SwytchcodeAdapter
 
 __all__ = [
     "BaseIntegrationAdapter",
@@ -24,4 +25,6 @@ __all__ = [
     "abdm_adapter",
     "google_maps_adapter",
     "GoogleMapsAdapter",
+    "swytchcode_adapter",
+    "SwytchcodeAdapter",
 ]

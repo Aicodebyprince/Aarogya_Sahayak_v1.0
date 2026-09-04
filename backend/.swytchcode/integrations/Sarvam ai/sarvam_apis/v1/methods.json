@@ -1,0 +1,154 @@
+{
+  "methods": [
+    {
+      "method_uuid": "",
+      "method_name": "Convert text to a streamed spoken audio response",
+      "canonical_id": "sarvam_apis.stream.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a document extraction job to pull structured fields from files",
+      "canonical_id": "sarvam_apis.job.extract.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a dubbing job for video or audio translation",
+      "canonical_id": "sarvam_apis.job.create1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a model response for a chat conversation",
+      "canonical_id": "sarvam_apis.completion.create1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new document intelligence job",
+      "canonical_id": "sarvam_apis.job.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download speech-to-text transcription output files for a bulk job",
+      "canonical_id": "sarvam_apis.job.downloadFiles.create2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download translated transcription files for a speech to text job",
+      "canonical_id": "sarvam_apis.job.downloadFiles.create1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Generate a chat completion response from a conversation",
+      "canonical_id": "sarvam_apis.completion.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a download URL for a completed Document AI job's output",
+      "canonical_id": "sarvam_apis.job.downloadUrl.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a secure URL to upload documents for processing",
+      "canonical_id": "sarvam_apis.job.upload"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get Document AI job results by ID",
+      "canonical_id": "sarvam_apis.job.results.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get download URLs for document digitization job files",
+      "canonical_id": "sarvam_apis.job.downloadFiles.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status and page metrics for a document digitization job",
+      "canonical_id": "sarvam_apis.job.status.get1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status of a Document AI job and its page usage",
+      "canonical_id": "sarvam_apis.job.status.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status of a speech to text bulk job",
+      "canonical_id": "sarvam_apis.job.status.get3"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status of a speech to text translate bulk job",
+      "canonical_id": "sarvam_apis.job.status.get2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List available model IDs for this deployment",
+      "canonical_id": "sarvam_apis.model.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve a served model by its ID",
+      "canonical_id": "sarvam_apis.model.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a bulk speech to text translation job",
+      "canonical_id": "sarvam_apis.job.create2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a document digitisation job from files or uploads",
+      "canonical_id": "sarvam_apis.job.digitise.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a dubbing job for a given job ID",
+      "canonical_id": "sarvam_apis.start.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a speech to text bulk job to transcribe multiple audio files",
+      "canonical_id": "sarvam_apis.job.create3"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a speech to text translate bulk job",
+      "canonical_id": "sarvam_apis.job.start1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start document digitization job and process uploaded files",
+      "canonical_id": "sarvam_apis.job.start"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start processing a speech to text bulk job",
+      "canonical_id": "sarvam_apis.job.start2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Translate text between various Indian languages",
+      "canonical_id": "sarvam_apis.translate.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Transliterate text between Indian scripts and English",
+      "canonical_id": "sarvam_apis.transliterate.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Upload audio files for bulk speech to text processing",
+      "canonical_id": "sarvam_apis.job.uploadFiles.create2"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Upload audio files for speech-to-text translation bulk job",
+      "canonical_id": "sarvam_apis.job.uploadFiles.create1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Upload files for document digitization",
+      "canonical_id": "sarvam_apis.job.uploadFiles.create"
+    }
+  ]
+}

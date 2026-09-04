@@ -823,6 +823,39 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
         </div>
       </header>
 
+      {/* Swytchcode AI Execution Governance Banner */}
+      <div
+        style={{
+          backgroundColor: "#F0FDF4",
+          borderBottom: "1px solid #BBF7D0",
+          padding: "6px 14px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: 11,
+          fontWeight: 600,
+          color: "#166534"
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <ShieldCheck size={14} color="#16A34A" />
+          <span>Swytchcode AI Runtime: <strong>Governed & Idempotent</strong></span>
+        </div>
+        <a
+          href="https://app.swytchcode.com/dashboard/overview"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: "#15803D",
+            textDecoration: "underline",
+            fontSize: 10,
+            fontWeight: 700
+          }}
+        >
+          Live Telemetry ↗
+        </a>
+      </div>
+
       {/* Error / Alert Banner */}
       {errorMessage && (
         <div

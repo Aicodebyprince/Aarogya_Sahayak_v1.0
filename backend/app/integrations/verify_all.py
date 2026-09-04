@@ -13,6 +13,7 @@ from app.ai.providers.tavily_service import tavily_service
 from app.ai.providers.n8n_service import n8n_service
 from app.ai.providers.abdm_service import abdm_service
 from app.ai.providers.litert_service import litert_service
+from app.integrations.swytchcode import swytchcode_adapter
 
 def verify_all_integrations():
     print("======================================================================")
@@ -93,10 +94,10 @@ def verify_all_integrations():
         },
         {
             "service": "Swytchcode AI Tool Execution",
-            "mode": "MOCK",
-            "live_connected": False,
-            "status": "ADAPTER_IMPLEMENTED",
-            "notes": "Allow-listed internal tool execution adapter configured"
+            "mode": swytchcode_adapter.mode.upper(),
+            "live_connected": not swytchcode_adapter.is_mock,
+            "status": "LIVE_CONNECTED" if not swytchcode_adapter.is_mock else "GOVERNOR_ACTIVE",
+            "notes": f"Account: {swytchcode_adapter.account_email}; Governs ASHA dispatch, Sarvam Voice, & Idempotency"
         }
     ]
 

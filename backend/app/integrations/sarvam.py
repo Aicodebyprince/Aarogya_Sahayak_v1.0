@@ -2,10 +2,12 @@ import requests
 from typing import Dict, Any, Optional
 from app.integrations.base import BaseIntegrationAdapter
 from app.config import settings
+from app.integrations.swytchcode import swytchcode_adapter
 
 class SarvamAdapter(BaseIntegrationAdapter):
     """
     Sarvam AI Indic Voice, Speech-to-Text, Text-to-Speech & Translation Adapter.
+    Governed by Swytchcode Runtime (Timeout enforcement, language policies, live telemetry).
     Supports Saaras (STT), Bulbul (TTS), and Mayura (Translate) models.
     """
     def __init__(self):
@@ -18,6 +20,8 @@ class SarvamAdapter(BaseIntegrationAdapter):
         return self.mode.lower() == "mock" or not self.api_key
 
     def speech_to_text(self, audio_bytes: bytes, filename: str = "audio.wav", language_code: str = "mr-IN") -> Dict[str, Any]:
+        # Swytchcode Governance Hook
+        gov_trace = swytchcode_adapter.govern_voice_call("speech_to_text", language_code, {"audio_len": len(audio_bytes) if audio_bytes else 0})
         if not audio_bytes or len(audio_bytes) == 0:
             return {
                 "status": "NO_AUDIO",
@@ -70,6 +74,8 @@ class SarvamAdapter(BaseIntegrationAdapter):
             }
 
     def text_to_speech(self, text: str, target_language_code: str = "mr-IN", speaker: Optional[str] = None, model: Optional[str] = None) -> Dict[str, Any]:
+        # Swytchcode Governance Hook
+        gov_trace = swytchcode_adapter.govern_voice_call("text_to_speech", target_language_code, {"text_len": len(text)})
         if not settings.SARVAM_TTS_ENABLED or self.is_mock or not self.api_key:
             return {
                 "status": "PROVIDER_UNAVAILABLE",

@@ -1,0 +1,4657 @@
+VERSION: 2.0.2
+DEFAULTS:
+  api-subscription-key: <API-SUBSCRIPTION-KEY>
+  bearer_token: BEARER <TOKEN>
+  w_base_url: https://api.sarvam.ai
+METHODS:
+  sarvam_apis.speech_to_text.create:
+    SUMMARY: Speech to Text
+    DESC: |-
+      ## Speech to Text API
+
+      This API transcribes speech to text in multiple Indian languages and English. Supports transcription for interactive applications.
+
+      ### Available Options:
+      - **REST API** (Current Endpoint): For quick responses under 30 seconds with immediate results
+      - **Batch API**: For longer audio files, [Follow This Documentation](https://docs.sarvam.ai/api-reference-docs/api-guides-tutorials/speech-to-text/batch-api)
+        - Supports diarization (speaker identification)
+
+      ### Note:
+      - Pricing differs for REST and Batch APIs
+      - Diarization is only available in Batch API with separate pricing
+      - Please refer to [here](https://docs.sarvam.ai/api-reference-docs/pricing) for detailed pricing information
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+      - model:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - mode:
+          TYPE: STRUCT(transcribe_post_speech_to_text_2a3dffaeRequest_mode)
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: transcribe
+      - language_code:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - with_timestamps:
+          TYPE: BOOL
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: false
+      - input_audio_codec:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_SpeechToTextResponse)
+        RETURNVAR: sarvam_apis_speech-to-text_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.speech-to-text.create
+  sarvam_apis.job.create3:
+    SUMMARY: Initiate Speech to Text Bulk Job V1
+    DESC: Create a new speech to text bulk job and receive a job UUID and storage folder details for processing multiple audio files. Set `job_parameters.input_audio_codec` when uploads are raw PCM (`pcm_s16le`, `pcm_l16`, or `pcm_raw`); the API auto-detects other formats. PCM must be 16 kHz.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text/job/v1
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextJobParameters_)
+    EXECUTION:
+      KIND: http
+      MODE: async
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextJobParameters_)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(BulkJobInitResponse)
+        RETURNVAR: sarvam_apis_job_create3_202
+        STATUS: 202
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.create3
+  sarvam_apis.job.uploadFiles.create2:
+    SUMMARY: Upload Files for Speech to Text Bulk Job V1
+    DESC: Generate presigned upload URLs for audio files that will be processed in a speech to text bulk job
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text/job/v1/upload-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(FilesRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(FilesRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(FilesUploadResponse)
+        RETURNVAR: sarvam_apis_job_uploadFiles_create2
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.uploadFiles.create2
+  sarvam_apis.job.start2:
+    SUMMARY: Start Speech to Text Bulk Job V1
+    DESC: Start processing a speech to text bulk job after all audio files have been uploaded
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text/job/v1/{job_id}/start
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - ptu_id:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+    RETURNS:
+      - RETURNTYPE: STRUCT(JobStatusResponse)
+        RETURNVAR: sarvam_apis_job_start2
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.start2
+  sarvam_apis.job.status.get3:
+    SUMMARY: Get Speech to Text Bulk Job V1 Status
+    DESC: |-
+      Retrieve the current status and details of a speech to text bulk job, including progress and file-level information.
+
+      **Rate Limiting Best Practice:** To prevent rate limit errors and ensure optimal server performance, we recommend implementing a minimum 5-millisecond delay between consecutive status polling requests. This helps maintain system stability while still providing timely status updates.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /speech-to-text/job/v1/{job_id}/status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+    RETURNS:
+      - RETURNTYPE: STRUCT(JobStatusResponse)
+        RETURNVAR: sarvam_apis_job_status_get3
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.status.get3
+  sarvam_apis.job.downloadFiles.create2:
+    SUMMARY: Download Files for Speech to Text Bulk Job V1
+    DESC: |-
+      Generate presigned download URLs for the transcription output files of a completed speech to text bulk job.
+
+      **Required body fields:** `job_id` and `files` (array of output filenames such as `"0.json"`). Obtain filenames from the job status response (`job_details[].outputs[].file_name`) after the job reaches `Completed` or `PartiallyCompleted`.
+
+      **Method:** POST only (GET returns 405).
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text/job/v1/download-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(FilesRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(FilesRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(FilesDownloadResponse)
+        RETURNVAR: sarvam_apis_job_downloadFiles_create2
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.downloadFiles.create2
+  sarvam_apis.text_to_speech.create:
+    SUMMARY: Text to Speech
+    DESC: |-
+      Convert text into spoken audio. The output is a base64-encoded audio string that must be decoded before use.
+
+      **Available Models:**
+      - **bulbul:v3**: Latest model with improved quality, 30+ voices, and temperature control
+      - **bulbul:v2**: Legacy model with pitch and loudness controls
+
+      **Important Notes for bulbul:v3:**
+      - Pitch and loudness parameters are NOT supported
+      - Pace range: 0.5 to 2.0
+      - Preprocessing is automatically enabled
+      - Default sample rate is 24000 Hz
+      - Supports sample rates: 8000, 16000, 22050, 24000 Hz (REST API also supports 32000, 44100, 48000 Hz)
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /text-to-speech
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(Sarvam_Model_API_TextToSpeechRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Model_API_TextToSpeechRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_TextToSpeechResponse)
+        RETURNVAR: sarvam_apis_text-to-speech_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.text-to-speech.create
+  sarvam_apis.stream.create:
+    SUMMARY: Text-to-Speech Stream Audio
+    DESC: |-
+      Converts the input text into a streamed spoken audio response.
+
+      This endpoint supports streaming audio using the specified output codec (e.g., `audio/mpeg` for MP3). The response is returned as a binary audio stream, which can be played or saved directly by the client.
+
+      Supports the `dict_id` parameter to apply a [pronunciation dictionary](https://docs.sarvam.ai/api-reference-docs/pronunciation-dictionary/create) during synthesis.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /text-to-speech/stream
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/octet-stream
+      BODY:
+        TYPE: STRUCT(Sarvam_Model_API_TextToSpeechStreamRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Model_API_TextToSpeechStreamRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: ANY
+        RETURNVAR: sarvam_apis_stream_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.stream.create
+  sarvam_apis.pronunciation_dictionary.create:
+    SUMMARY: Create Pronunciation Dictionary
+    DESC: |-
+      Upload a `.json` file to create a new pronunciation dictionary. Only supported by **bulbul:v3**.
+
+      The file should contain a JSON object with a `pronunciations` key mapping language codes to word-pronunciation pairs. See the [Pronunciation Dictionary guide](/api-reference-docs/api-guides-tutorials/text-to-speech/pronunciation-dictionary) for format details and examples.
+
+      The returned `dictionary_id` can be passed as `dict_id` in text-to-speech requests (REST, HTTP Stream, and WebSocket).
+
+      **Limits:** Max 10 dictionaries per user, 100 words per dictionary, 1 MB file size.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /text-to-speech/pronunciation-dictionary
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_PronunciationDictionaryResponse)
+        RETURNVAR: sarvam_apis_pronunciation-dictionary_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request — Invalid JSON, missing required fields, or bad schema. (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 413
+        WHEN: Payload Too Large — File size exceeds the 1 MB limit. (HTTP 413)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity — Word limit exceeded (>100 words per dictionary) or dictionary limit exceeded (>10 dictionaries per user). (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.pronunciation-dictionary.create
+  sarvam_apis.pronunciation_dictionary.list:
+    SUMMARY: List Pronunciation Dictionaries
+    DESC: Retrieve a list of all pronunciation dictionary IDs associated with the authenticated user.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /text-to-speech/pronunciation-dictionary
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_PronunciationDictionaryGetResponse)
+        RETURNVAR: sarvam_apis_pronunciation-dictionary_list
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request — Invalid JSON, missing required fields, or bad schema. (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.pronunciation-dictionary.list
+  sarvam_apis.pronunciation_dictionary.update:
+    SUMMARY: Update Pronunciation Dictionary
+    DESC: |-
+      Update an existing pronunciation dictionary by uploading a JSON file. You can add new words, change existing pronunciations, or both — entries not included in the uploaded file remain unchanged.
+
+      **Limits:** Max 100 words per dictionary, 1 MB file size.
+
+      The response includes the `dictionary_id` and the updated pronunciation mappings for verification.
+    HTTP:
+      METHOD: PUT
+      ENDPOINT: /text-to-speech/pronunciation-dictionary
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - dict_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_PronunciationDictionaryUpdateResponse)
+        RETURNVAR: sarvam_apis_pronunciation-dictionary_update
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request — Invalid JSON, missing required fields, or bad schema. (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 404
+        WHEN: Not Found — Dictionary not found. (HTTP 404)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 413
+        WHEN: Payload Too Large — File size exceeds the 1 MB limit. (HTTP 413)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity — Word limit exceeded (>100 words per dictionary). (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.pronunciation-dictionary.update
+  sarvam_apis.pronunciation_dictionary.delete:
+    SUMMARY: Delete Pronunciation Dictionary
+    DESC: Delete a pronunciation dictionary by its ID. Once deleted, the dictionary can no longer be referenced in text-to-speech requests.
+    HTTP:
+      METHOD: DELETE
+      ENDPOINT: /text-to-speech/pronunciation-dictionary
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - dict_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_PronunciationDictionaryDeleteResponse)
+        RETURNVAR: sarvam_apis_pronunciation-dictionary_delete
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request — Invalid JSON, missing required fields, or bad schema. (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 404
+        WHEN: Not Found — Dictionary not found. (HTTP 404)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.pronunciation-dictionary.delete
+  sarvam_apis.pronunciation_dictionary.get:
+    SUMMARY: Get Pronunciation Dictionary
+    DESC: |-
+      Retrieve the full pronunciation mappings for a specific dictionary by its ID.
+
+      Returns the pronunciation data organized by language code, where each language contains word-to-pronunciation pairs.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /text-to-speech/pronunciation-dictionary/{dict_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - dict_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_PronunciationDictionaryData)
+        RETURNVAR: sarvam_apis_pronunciation-dictionary_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request — Invalid JSON, missing required fields, or bad schema. (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 404
+        WHEN: Not Found — Dictionary not found. (HTTP 404)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.pronunciation-dictionary.get
+  sarvam_apis.translate.create:
+    SUMMARY: Translate Text
+    DESC: |-
+      **Translation** converts text from one language to another while preserving its meaning.
+      For Example: **'मैं ऑफिस जा रहा हूँ'** translates to **'I am going to the office'** in English, where the script and language change, but the original meaning remains the same.
+
+      Available languages:
+      - **`bn-IN`**: Bengali
+      - **`en-IN`**: English
+      - **`gu-IN`**: Gujarati
+      - **`hi-IN`**: Hindi
+      - **`kn-IN`**: Kannada
+      - **`ml-IN`**: Malayalam
+      - **`mr-IN`**: Marathi
+      - **`od-IN`**: Odia
+      - **`pa-IN`**: Punjabi
+      - **`ta-IN`**: Tamil
+      - **`te-IN`**: Telugu
+
+      ### Newly added languages:
+      - **`as-IN`**: Assamese
+      - **`brx-IN`**: Bodo
+      - **`doi-IN`**: Dogri
+      - **`kok-IN`**: Konkani
+      - **`ks-IN`**: Kashmiri
+      - **`mai-IN`**: Maithili
+      - **`mni-IN`**: Manipuri (Meiteilon)
+      - **`ne-IN`**: Nepali
+      - **`sa-IN`**: Sanskrit
+      - **`sat-IN`**: Santali
+      - **`sd-IN`**: Sindhi
+      - **`ur-IN`**: Urdu
+
+      For hands-on practice, you can explore the notebook tutorial on [Translate API Tutorial](https://github.com/sarvamai/sarvam-ai-cookbook/blob/main/notebooks/translate/Translate_API_Tutorial.ipynb).
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /translate
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(Sarvam_Model_API_TranslationRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Model_API_TranslationRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_TranslationResponse)
+        RETURNVAR: sarvam_apis_translate_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.translate.create
+  sarvam_apis.transliterate.create:
+    SUMMARY: Transliterate Text
+    DESC: |-
+      **Transliteration** converts text from one script to another while preserving the original pronunciation. For example, **'नमस्ते'** becomes **'namaste'** in English, and **'how are you'** can be written as **'हाउ आर यू'** in Devanagari. This process ensures that the sound of the original text remains intact, even when written in a different script.
+
+      Transliteration is useful when you want to represent words phonetically across different writing systems, such as converting **'मैं ऑफिस जा रहा हूँ'** to **'main office ja raha hun'** in English letters.
+
+      **Translation**, on the other hand, converts text from one language to another while preserving the meaning rather than pronunciation. For example, **'मैं ऑफिस जा रहा हूँ'** translates to **'I am going to the office'** in English, changing both the script and the language while conveying the intended message.
+      ### Examples of **Transliteration**:
+      - **'Good morning'** becomes **'गुड मॉर्निंग'** in Hindi, where the pronunciation is preserved but the meaning is not translated.
+      - **'सुप्रभात'** becomes **'suprabhat'** in English.
+
+      Available languages:
+      - **`en-IN`**: English
+      - **`hi-IN`**: Hindi
+      - **`bn-IN`**: Bengali
+      - **`gu-IN`**: Gujarati
+      - **`kn-IN`**: Kannada
+      - **`ml-IN`**: Malayalam
+      - **`mr-IN`**: Marathi
+      - **`od-IN`**: Odia
+      - **`pa-IN`**: Punjabi
+      - **`ta-IN`**: Tamil
+      - **`te-IN`**: Telugu
+
+      For hands-on practice, you can explore the notebook tutorial on [Transliterate API Tutorial](https://github.com/sarvamai/sarvam-ai-cookbook/blob/main/notebooks/transliterate/Transliterate_API_Tutorial.ipynb).
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /transliterate
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(Sarvam_Model_API_TransliterationRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Model_API_TransliterationRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_TransliterationResponse)
+        RETURNVAR: sarvam_apis_transliterate_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.transliterate.create
+  sarvam_apis.text_lid.create:
+    SUMMARY: Language Identification
+    DESC: Identifies the language (e.g., en-IN, hi-IN) and script (e.g., Latin, Devanagari) of the input text, supporting multiple languages.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /text-lid
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(Sarvam_Model_API_LanguageIdentificationRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Model_API_LanguageIdentificationRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_LanguageIdentificationResponse)
+        RETURNVAR: sarvam_apis_text-lid_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.text-lid.create
+  sarvam_apis.completion.create:
+    SUMMARY: Chat Completions
+    DESC: Creates a model response for the given chat conversation. This endpoint serves **only** `sarvam-105b` and `sarvam-105b-conversations`.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v1/chat/completions
+      HEADERS:
+        Content-Type: application/json
+        Authorization: bearer_token
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(CreateChatCompletionRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - Authorization:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(CreateChatCompletionRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(CreateChatCompletionResponse)
+        RETURNVAR: sarvam_apis_completion_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.completion.create
+  sarvam_apis.completion.create1:
+    SUMMARY: Chat Completion
+    DESC: |-
+      Creates a model response for the given chat conversation. OpenAI-compatible request and response shape; differences from OpenAI are called out in the Open-Source Models documentation.
+
+      Requires `api-subscription-key`. Keys without beta access to this endpoint receive `400 invalid_request_error` before the model is called. Set `"stream": true` to receive the reply incrementally as server-sent events. Reasoning models return their chain-of-thought in a separate `reasoning_content` field on the message (`delta.reasoning_content` when streaming); reasoning tokens count against `max_tokens`.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /v2/chat/completions
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(CreateChatCompletionV2Request)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(CreateChatCompletionV2Request)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(CreateChatCompletionV2Response)
+        RETURNVAR: sarvam_apis_completion_create1
+        STATUS: 200
+    ERRORS:
+      - TYPE: ANY
+        STATUS: 400
+        WHEN: Invalid request — a malformed field, a capability the model lacks (e.g. an image sent to a text-only model), or a remote image URL. (HTTP 400)
+      - TYPE: ANY
+        STATUS: 401
+        WHEN: Missing or invalid API key — returned as 403 invalid_api_key_error in practice. (HTTP 401)
+      - TYPE: ANY
+        STATUS: 403
+        WHEN: Missing or invalid API key (`invalid_api_key_error`). (HTTP 403)
+      - TYPE: ANY
+        STATUS: 413
+        WHEN: Request larger than 10 MB (text and inline images combined). (HTTP 413)
+      - TYPE: ANY
+        STATUS: 422
+        WHEN: Request that cannot be served — e.g. estimated prompt tokens + max_tokens exceed the model's context window. (HTTP 422)
+      - TYPE: ANY
+        STATUS: 429
+        WHEN: Rate limit exceeded. (HTTP 429)
+    CANONICAL_ID: sarvam_apis.completion.create1
+  sarvam_apis.model.list:
+    SUMMARY: List Models
+    DESC: Lists the model IDs this deployment currently serves. A model is only served where its backend is configured, so the list is environment-specific — fetch it rather than hardcoding IDs.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v2/models
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(ModelListResponse)
+        RETURNVAR: sarvam_apis_model_list
+        STATUS: 200
+    CANONICAL_ID: sarvam_apis.model.list
+  sarvam_apis.model.get:
+    SUMMARY: Get Model
+    DESC: Retrieves one served model by ID.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /v2/models/{model_id}
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - model_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(ModelObject)
+        RETURNVAR: sarvam_apis_model_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: ANY
+        STATUS: 404
+        WHEN: Model not served by this deployment. (HTTP 404)
+      - TYPE: ANY
+        STATUS: 422
+        WHEN: Validation Error (HTTP 422)
+    CANONICAL_ID: sarvam_apis.model.get
+  sarvam_apis.job.create1:
+    SUMMARY: Create Dubbing Job
+    DESC: |-
+      ## Creative Agents - Dubbing
+
+      Create a dubbing job that translates a source video or audio file into one or more Indian languages, with optional voice cloning, watermark control, and translation-style (register) control.
+
+      **Base URL:** `https://api.sarvam.ai/dubbing`.
+      **Auth:** send your key in the `api-subscription-key` header, not `Authorization: Bearer`.
+
+      This call only creates the job. It does not accept the media file. The response returns `data.job_id` and a short-lived signed `data.upload_url`. After that:
+      1. `PUT` the raw media bytes to `upload_url` with headers `Content-Type: <mime>` (e.g. `video/mp4`) and `x-ms-blob-type: BlockBlob`.
+      2. `POST /jobs/{job_id}/start` to begin the pipeline.
+
+      A single job dubs into every language in `target_langs`, so you don't need a separate job per language.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /jobs
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobResponse)
+        RETURNVAR: sarvam_apis_job_create1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 401
+        WHEN: Unauthorized. Send a valid `api-subscription-key`. (HTTP 401)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity. The body is invalid; check enum values and required fields. (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.job.create1
+  sarvam_apis.start.create:
+    SUMMARY: Start Dubbing Job
+    DESC: |-
+      Start a dubbing job once the media file has been uploaded to the signed `upload_url` returned by `POST /jobs`. The job status then moves from `queued` to `in_progress`, and finally to `completed` or `failed`.
+
+      Keep `editor_flow` set to `false` (the default) when creating the job so exports auto-produce once the pipeline finishes.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /jobs/{job_id}/start
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Creative_API_DubbingStartResponse)
+        RETURNVAR: sarvam_apis_start_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 401
+        WHEN: Unauthorized. Send a valid `api-subscription-key`. (HTTP 401)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.start.create
+  sarvam_apis.live_statu.get:
+    SUMMARY: Get Dubbing Live Status
+    DESC: |-
+      Poll the pipeline progress of a dubbing job. `data.status` moves from `queued` to `in_progress`, then to `completed` or `failed`.
+
+      > **Note:** `live-status` is a progress signal only. The source of truth for downloadable outputs is `GET /jobs/{job_id}/export-status`. Each `(target_language, export_type)` export completes independently and carries its own `status` and `download_url`.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /jobs/{job_id}/live-status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Creative_API_DubbingLiveStatusResponse)
+        RETURNVAR: sarvam_apis_live-statu_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 401
+        WHEN: Unauthorized. Send a valid `api-subscription-key`. (HTTP 401)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.live-statu.get
+  sarvam_apis.export_statu.get:
+    SUMMARY: Get Dubbing Export Status
+    DESC: |-
+      Retrieve the per-output export status for a dubbing job. Returns `data.exports[]`, one entry per `(target_language, export_type)` combination, each with its own `status` and signed `download_url`.
+
+      **This is the source of truth for downloads.** Before downloading, confirm an entry's `status == "completed"` and use its `download_url`.
+
+      > Signed download URLs are time-limited (~24h). Re-fetch this endpoint for a fresh URL rather than caching long-term.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /jobs/{job_id}/export-status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - limit:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+          DEFAULT: 5
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Creative_API_DubbingExportStatusResponse)
+        RETURNVAR: sarvam_apis_export-statu_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 401
+        WHEN: Unauthorized. Send a valid `api-subscription-key`. (HTTP 401)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+    CANONICAL_ID: sarvam_apis.export-statu.get
+  sarvam_apis.job.upload:
+    SUMMARY: Create Document AI Upload URL
+    DESC: |-
+      Creates a direct-upload handle for a file to be processed later.
+
+      **Flow:**
+      1. Call this endpoint with the MIME type you will upload (e.g. `application/pdf`).
+      2. Upload the file using the returned `method`, `url` and `headers` before `expires_at`.
+      3. Pass the returned `upload_id` through the `upload_ids` field on a later digitise or extract job request.
+
+      When `content_type` is set, the upload's `Content-Type` header must match it.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-ai/v1/job/upload
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(DocAIPresignUploadRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(DocAIPresignUploadRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocAIPresignUploadResponse)
+        RETURNVAR: sarvam_apis_job_upload_201
+        STATUS: 201
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 400
+        WHEN: Invalid request (HTTP 400)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 402
+        WHEN: Billing or entitlement error (HTTP 402)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 429
+        WHEN: Rate or admission limit exceeded (HTTP 429)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 503
+        WHEN: Billing unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.upload
+  sarvam_apis.job.digitise.create:
+    SUMMARY: Create Document AI Digitise Job
+    DESC: |-
+      Creates and starts a digitise job from files or pre-uploaded handles. Digitise converts documents into structured HTML, Markdown, or JSON while preserving layout.
+
+      **Input:** Exactly one of `file` and `upload_ids` must be provided. Use `POST /doc-ai/v1/job/upload` to obtain upload IDs.
+
+      **Processing:** the job runs asynchronously. Poll `GET /doc-ai/v1/job/{job_id}/status` until a terminal status (`completed`, `partially_completed`, `failed`, `rejected`), then fetch output via the results or download-url endpoints.
+
+      Digitise JSON results include blocks with text, tag and bounding box.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-ai/v1/job/digitise
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: "[]BINARY"
+          REQUIRED: false
+          LOCATION: body
+      - upload_ids:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - language:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: en-IN
+      - output_format:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: html
+      - content_type:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: printed
+      - model:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: sarvam-vision-v1
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocAIStartJobResponse)
+        RETURNVAR: sarvam_apis_job_digitise_create_201
+        STATUS: 201
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 400
+        WHEN: Invalid request or schema (HTTP 400)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 402
+        WHEN: Billing or entitlement error (HTTP 402)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 413
+        WHEN: File too large (HTTP 413)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 429
+        WHEN: Rate or admission limit exceeded (HTTP 429)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 503
+        WHEN: Billing unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.digitise.create
+  sarvam_apis.job.extract.create:
+    SUMMARY: Create Document AI Extract Job
+    DESC: |-
+      Creates and starts an extract job from files or pre-uploaded handles. Extract pulls structured fields out of documents according to a schema.
+
+      **Input:** Exactly one of `file` and `upload_ids` must be provided.
+
+      **Schema:** exactly one of `schema` (inline JSON schema) and `config_id` (saved extraction configuration) is required.
+
+      **Processing:** the job runs asynchronously. Poll `GET /doc-ai/v1/job/{job_id}/status` until a terminal status (`completed`, `partially_completed`, `failed`, `rejected`), then fetch output via the results or download-url endpoints.
+
+      Extract results include `result`, plus `annotations` mirroring the result shape where every leaf has `confidence` and `sources`.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-ai/v1/job/extract
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: "[]BINARY"
+          REQUIRED: false
+          LOCATION: body
+      - upload_ids:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - schema:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - config_id:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - language:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: en-IN
+      - output_format:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: json
+      - classification:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: "false"
+      - model:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+          DEFAULT: sarvam-vision-v1
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocAIStartJobResponse)
+        RETURNVAR: sarvam_apis_job_extract_create_201
+        STATUS: 201
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 400
+        WHEN: Invalid request or schema (HTTP 400)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 402
+        WHEN: Billing or entitlement error (HTTP 402)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 413
+        WHEN: File too large (HTTP 413)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 429
+        WHEN: Rate or admission limit exceeded (HTTP 429)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 503
+        WHEN: Billing unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.extract.create
+  sarvam_apis.job.status.get:
+    SUMMARY: Get Document AI Job Status
+    DESC: |-
+      Returns a job's status and page-level usage.
+
+      **Terminal statuses:** `completed`, `partially_completed`, `failed`, `rejected`. Results and download URLs are only available after the job reaches a terminal status.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /doc-ai/v1/job/{job_id}/status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocAIJobStatusResponse)
+        RETURNVAR: sarvam_apis_job_status_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 404
+        WHEN: Job not found (HTTP 404)
+    CANONICAL_ID: sarvam_apis.job.status.get
+  sarvam_apis.job.results.get:
+    SUMMARY: Get Document AI Job Results
+    DESC: |-
+      Returns terminal job results. Results are never available while a job is running; requesting them before a terminal status returns `409`.
+
+      **Digitise results** include `job_id`, `type`, `status`, `usage` and `documents`.
+
+      **Extract results** include `job_id`, `type`, `status`, `usage`, `result`, `annotations` and `version`. `annotations` mirrors the result shape; every leaf has `confidence` and `sources`.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /doc-ai/v1/job/{job_id}/results
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - format:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(docAI_get_results_Response_200)
+        RETURNVAR: sarvam_apis_job_results_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 404
+        WHEN: Job not found (HTTP 404)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 409
+        WHEN: Results requested before the job reached a terminal status (HTTP 409)
+    CANONICAL_ID: sarvam_apis.job.results.get
+  sarvam_apis.job.downloadUrl.get:
+    SUMMARY: Get Document AI Download URL
+    DESC: |-
+      Creates a download URL for a completed job's output. Download the output using the returned `method`, `url` and `headers` before `expires_at`.
+
+      Requesting a download URL before the job reaches a terminal status returns `409`.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /doc-ai/v1/job/{job_id}/download-url
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocAIDownloadURLResponse)
+        RETURNVAR: sarvam_apis_job_downloadUrl_get
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 404
+        WHEN: Job not found (HTTP 404)
+      - TYPE: STRUCT(DocAIErrorModel)
+        STATUS: 409
+        WHEN: Download requested before the job reached a terminal status (HTTP 409)
+    CANONICAL_ID: sarvam_apis.job.downloadUrl.get
+  sarvam_apis.speech_to_text_translate.create:
+    SUMMARY: Speech To Text Translate
+    DESC: |-
+      ## Speech to Text Translation API
+
+      This API automatically detects the input language, transcribes the speech, and translates the text to English.
+
+      ### Available Options:
+      - **REST API** (Current Endpoint): For quick responses under 30 seconds with immediate results
+      - **Batch API**: For longer audio files [Follow this documentation](https://docs.sarvam.ai/api-reference-docs/api-guides-tutorials/speech-to-text/batch-api)
+        - Supports diarization (speaker identification)
+
+      ### Note:
+      - Pricing differs for REST and Batch APIs
+      - Diarization is only available in Batch API with separate pricing
+      - Please refer to [here](https://docs.sarvam.ai/api-reference-docs/pricing) for detailed pricing information
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text-translate
+      HEADERS:
+        Content-Type: multipart/form-data
+      CONTENT_TYPE: multipart/form-data
+      ACCEPT: application/json
+      BODYTYPE: form-data
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - file:
+          TYPE: BINARY
+          REQUIRED: true
+          LOCATION: body
+          FORMAT: binary
+      - prompt:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - model:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+      - input_audio_codec:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: body
+    RETURNS:
+      - RETURNTYPE: STRUCT(Sarvam_Model_API_SpeechToTextTranslateResponse)
+        RETURNVAR: sarvam_apis_speech-to-text-translate_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(Sarvam_Model_API_ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.speech-to-text-translate.create
+  sarvam_apis.job.create2:
+    SUMMARY: Initiate Speech to Text Translate Bulk Job V1
+    DESC: Create a new speech to text translate bulk job and receive a job UUID and storage folder details for processing multiple audio files with translation. Set `job_parameters.input_audio_codec` when uploads are raw PCM (`pcm_s16le`, `pcm_l16`, or `pcm_raw`); the API auto-detects other formats. PCM must be 16 kHz.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text-translate/job/v1
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextTranslateJobParameters_)
+    EXECUTION:
+      KIND: http
+      MODE: async
+    INPUTS:
+      - ptu_id:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+      - body:
+          TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextTranslateJobParameters_)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(BulkJobInitResponse)
+        RETURNVAR: sarvam_apis_job_create2_202
+        STATUS: 202
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.create2
+  sarvam_apis.job.uploadFiles.create1:
+    SUMMARY: Upload Files for Speech to Text Translate Bulk Job V1
+    DESC: Generate presigned upload URLs for audio files that will be processed in a speech to text translate bulk job
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text-translate/job/v1/upload-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(FilesRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - ptu_id:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+      - body:
+          TYPE: STRUCT(FilesRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(FilesUploadResponse)
+        RETURNVAR: sarvam_apis_job_uploadFiles_create1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.uploadFiles.create1
+  sarvam_apis.job.start1:
+    SUMMARY: Start Speech to Text Translate Bulk Job V1
+    DESC: Start processing a speech to text translate bulk job after all audio files have been uploaded
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text-translate/job/v1/{job_id}/start
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - ptu_id:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+    RETURNS:
+      - RETURNTYPE: STRUCT(JobStatusResponse)
+        RETURNVAR: sarvam_apis_job_start1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.start1
+  sarvam_apis.job.status.get2:
+    SUMMARY: Get Speech to Text Translate Bulk Job V1 Status
+    DESC: |-
+      Retrieve the current status and details of a speech to text translate bulk job, including progress and file-level information.
+
+      **Rate Limiting Best Practice:** To prevent rate limit errors and ensure optimal server performance, we recommend implementing a minimum 5-millisecond delay between consecutive status polling requests. This helps maintain system stability while still providing timely status updates.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /speech-to-text-translate/job/v1/{job_id}/status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+    RETURNS:
+      - RETURNTYPE: STRUCT(JobStatusResponse)
+        RETURNVAR: sarvam_apis_job_status_get2
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.status.get2
+  sarvam_apis.job.downloadFiles.create1:
+    SUMMARY: Download Files for Speech to Text Translate Bulk Job V1
+    DESC: |-
+      Generate presigned download URLs for the translated transcription output files of a completed speech to text translate bulk job.
+
+      **Required body fields:** `job_id` and `files` (array of output filenames such as `"0.json"`). Obtain filenames from the job status response after the job completes.
+
+      **Method:** POST only (GET returns 405).
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /speech-to-text-translate/job/v1/download-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(FilesRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - ptu_id:
+          TYPE: INT
+          REQUIRED: false
+          LOCATION: query
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: false
+          LOCATION: header
+          DEFAULT: ""
+      - body:
+          TYPE: STRUCT(FilesRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(FilesDownloadResponse)
+        RETURNVAR: sarvam_apis_job_downloadFiles_create1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 422
+        WHEN: Unprocessable Entity (HTTP 422)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded (HTTP 429)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(ErrorMessage)
+        STATUS: 503
+        WHEN: Service Overloaded (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.downloadFiles.create1
+  sarvam_apis.job.create:
+    SUMMARY: Create Document Intelligence Job (Legacy)
+    DESC: |-
+      **Legacy API.** The `/doc-digitization/job/v1` endpoints remain available for existing integrations. For new integrations, use the Document Intelligence API under `/doc-ai/v1`.
+
+      Creates a new Document Intelligence job.
+
+      **Supported Languages (BCP-47 format):**
+      - `hi-IN`: Hindi (default)
+      - `en-IN`: English
+      - `bn-IN`: Bengali
+      - `gu-IN`: Gujarati
+      - `kn-IN`: Kannada
+      - `ml-IN`: Malayalam
+      - `mr-IN`: Marathi
+      - `od-IN`: Odia
+      - `pa-IN`: Punjabi
+      - `ta-IN`: Tamil
+      - `te-IN`: Telugu
+      - `ur-IN`: Urdu
+      - `as-IN`: Assamese
+      - `brx-IN`: Bodo
+      - `doi-IN`: Dogri
+      - `ks-IN`: Kashmiri
+      - `kok-IN`: Konkani
+      - `mai-IN`: Maithili
+      - `mni-IN`: Manipuri
+      - `ne-IN`: Nepali
+      - `sa-IN`: Sanskrit
+      - `sat-IN`: Santali
+      - `sd-IN`: Sindhi
+
+      **Output Formats (delivered as ZIP file):**
+      - `html`: Structured HTML files with layout preservation
+      - `md`: Markdown files (default)
+      - `json`: Structured JSON files for programmatic processing
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-digitization/job/v1
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(DocDigitizationCreateJobRequest)
+    EXECUTION:
+      KIND: http
+      MODE: async
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(DocDigitizationCreateJobRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocDigitizationCreateJobResponse)
+        RETURNVAR: sarvam_apis_job_create_202
+        STATUS: 202
+    ERRORS:
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded / Rate Limited (HTTP 429)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 503
+        WHEN: Service Unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.create
+  sarvam_apis.job.uploadFiles.create:
+    SUMMARY: Get Document Intelligence Upload URLs (Legacy)
+    DESC: |-
+      **Legacy API.** The `/doc-digitization/job/v1` endpoints remain available for existing integrations. For new integrations, use the Document Intelligence API under `/doc-ai/v1`.
+
+      Returns presigned URLs for uploading input files.
+
+      **File Constraints:**
+      - Exactly one file required (PDF or ZIP)
+      - PDF files: `.pdf` extension
+      - ZIP files: `.zip` extension
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-digitization/job/v1/upload-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+      BODY:
+        TYPE: STRUCT(DocDigitizationUploadFilesRequest)
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+      - body:
+          TYPE: STRUCT(DocDigitizationUploadFilesRequest)
+          REQUIRED: false
+          LOCATION: body
+          CONTENT_TYPE: application/json
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocDigitizationUploadFilesResponse)
+        RETURNVAR: sarvam_apis_job_uploadFiles_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded / Rate Limited (HTTP 429)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 503
+        WHEN: Service Unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.uploadFiles.create
+  sarvam_apis.job.start:
+    SUMMARY: Start Document Intelligence Job (Legacy)
+    DESC: |-
+      **Legacy API.** The `/doc-digitization/job/v1` endpoints remain available for existing integrations. For new integrations, use the Document Intelligence API under `/doc-ai/v1`.
+
+      Validates the uploaded file and starts processing.
+
+      **Validation Checks:**
+      - File must be uploaded before starting
+      - File size must not exceed 200 MB
+      - PDF must be parseable by the PDF parser
+      - ZIP must contain only JPEG/PNG images
+      - ZIP must be flat (no nested folders beyond one level)
+      - ZIP must contain at least one valid image
+      - Page/image count must not exceed 10 (returns `400` with `invalid_request_error` if exceeded)
+      - User must have sufficient credits
+
+      **Processing:**
+      Job runs asynchronously. Poll the status endpoint for completion.
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-digitization/job/v1/{job_id}/start
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: async
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+          FORMAT: uuid
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocDigitizationJobStatusResponse)
+        RETURNVAR: sarvam_apis_job_start_202
+        STATUS: 202
+    ERRORS:
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded / Rate Limited (HTTP 429)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 503
+        WHEN: Service Unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.start
+  sarvam_apis.job.status.get1:
+    SUMMARY: Get Document Intelligence Job Status (Legacy)
+    DESC: |-
+      **Legacy API.** The `/doc-digitization/job/v1` endpoints remain available for existing integrations. For new integrations, use the Document Intelligence API under `/doc-ai/v1`.
+
+      Returns the current status of a job with page-level metrics.
+
+      **Job States:**
+      - `Accepted`: Job created, awaiting file upload
+      - `Pending`: File uploaded, waiting to start
+      - `Running`: Processing in progress
+      - `Completed`: All pages processed successfully
+      - `PartiallyCompleted`: Some pages succeeded, some failed
+      - `Failed`: All pages failed or job-level error
+
+      **Page Metrics:**
+      Response includes detailed progress: total pages, pages processed, succeeded, failed, and per-page errors.
+    HTTP:
+      METHOD: GET
+      ENDPOINT: /doc-digitization/job/v1/{job_id}/status
+      HEADERS: {}
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+          FORMAT: uuid
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocDigitizationJobStatusResponse)
+        RETURNVAR: sarvam_apis_job_status_get1
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded / Rate Limited (HTTP 429)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 503
+        WHEN: Service Unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.status.get1
+  sarvam_apis.job.downloadFiles.create:
+    SUMMARY: Get Document Intelligence Download URLs (Legacy)
+    DESC: |-
+      **Legacy API.** The `/doc-digitization/job/v1` endpoints remain available for existing integrations. For new integrations, use the Document Intelligence API under `/doc-ai/v1`.
+
+      Returns presigned URLs for downloading output files.
+
+      **Method:** POST only. A GET request to this path returns 405 Method Not Allowed.
+
+      **Prerequisites:**
+      - Job must be in `Completed` or `PartiallyCompleted` state
+      - Failed jobs have no output available
+    HTTP:
+      METHOD: POST
+      ENDPOINT: /doc-digitization/job/v1/{job_id}/download-files
+      HEADERS:
+        Content-Type: application/json
+      CONTENT_TYPE: application/json
+      ACCEPT: application/json
+    EXECUTION:
+      KIND: http
+      MODE: sync
+    INPUTS:
+      - job_id:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: path
+          FORMAT: uuid
+      - api-subscription-key:
+          TYPE: STRING
+          REQUIRED: true
+          LOCATION: header
+    RETURNS:
+      - RETURNTYPE: STRUCT(DocDigitizationDownloadFilesResponse)
+        RETURNVAR: sarvam_apis_job_downloadFiles_create
+        STATUS: 200
+    ERRORS:
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 400
+        WHEN: Bad Request (HTTP 400)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 403
+        WHEN: Forbidden (HTTP 403)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 429
+        WHEN: Quota Exceeded / Rate Limited (HTTP 429)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 500
+        WHEN: Internal Server Error (HTTP 500)
+      - TYPE: STRUCT(DocDigitizationErrorMessage)
+        STATUS: 503
+        WHEN: Service Unavailable (HTTP 503)
+    CANONICAL_ID: sarvam_apis.job.downloadFiles.create
+STRUCTS:
+  Sarvam_Model_API_TimestampsModel:
+    - name: words
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: List of transcript chunks (sentence or phrase segments). Not individual words.
+    - name: start_time_seconds
+      TYPE: "[]FLOAT"
+      REQUIRED: true
+      comment: List of start times for each chunk in seconds.
+    - name: end_time_seconds
+      TYPE: "[]FLOAT"
+      REQUIRED: true
+      comment: List of end times for each chunk in seconds.
+  Sarvam_Model_API_SpeechToTextResponse_timestamps:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_TimestampsModel
+      TYPE: STRUCT(Sarvam_Model_API_TimestampsModel)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_SpeechToTextResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: transcript
+      TYPE: STRING
+      REQUIRED: true
+      comment: The transcribed text from the provided audio file.
+    - name: timestamps
+      TYPE: STRUCT(Sarvam_Model_API_SpeechToTextResponse_timestamps)
+      REQUIRED: false
+      comment: Chunk-level timestamps for the transcribed text (sentence/phrase segments, not individual words). Present only when `with_timestamps` is `true`; omitted otherwise.
+    - name: language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: This will return the BCP-47 code of language spoken in the input. If multiple languages are detected, this will return language code of most predominant spoken language. If no language is detected, this will be null
+    - name: language_probability
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: Float value (0.0 to 1.0) indicating confidence in the detected language. Present when `language_code` is omitted or set to `unknown`; omitted (or null) when a specific language code is provided.
+  Sarvam_Model_API_ErrorDetails:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Message describing the error
+    - name: code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Error code for the specific error that has occurred. Refer to the error code documentation for more details.
+  Sarvam_Model_API_ErrorMessage:
+    - name: error
+      TYPE: STRUCT(Sarvam_Model_API_ErrorDetails)
+      REQUIRED: true
+      comment: Error details
+  SpeechToTextJobParameters_language_code:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_SpeechToTextLanguage
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  SpeechToTextJobParameters_mode:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_Mode
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  SpeechToTextJobParameters:
+    - name: language_code
+      TYPE: STRUCT(SpeechToTextJobParameters_language_code)
+      REQUIRED: false
+      DEFAULT: unknown
+      comment: |-
+        Specifies the language of the input audio in BCP-47 format.
+
+        **Available Options:**
+        - `unknown` (default): Use when the language is not known; the API will auto-detect.
+        - `hi-IN`: Hindi
+        - `bn-IN`: Bengali
+        - `kn-IN`: Kannada
+        - `ml-IN`: Malayalam
+        - `mr-IN`: Marathi
+        - `od-IN`: Odia
+        - `pa-IN`: Punjabi
+        - `ta-IN`: Tamil
+        - `te-IN`: Telugu
+        - `en-IN`: English
+        - `gu-IN`: Gujarati
+
+        **Additional Options (saaras:v3 only):**
+        - `as-IN`: Assamese
+        - `ur-IN`: Urdu
+        - `ne-IN`: Nepali
+        - `kok-IN`: Konkani
+        - `ks-IN`: Kashmiri
+        - `sd-IN`: Sindhi
+        - `sa-IN`: Sanskrit
+        - `sat-IN`: Santali
+        - `mni-IN`: Manipuri
+        - `brx-IN`: Bodo
+        - `mai-IN`: Maithili
+        - `doi-IN`: Dogri
+    - name: model
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        Model to be used for speech to text.
+
+        - **saaras:v3** (default, recommended): State-of-the-art model with flexible output formats. Supports multiple modes via the `mode` parameter: transcribe, translate, verbatim, translit, codemix.
+
+        - **saaras:v4** (latest): Flexible output formats across all modes (transcribe, translate, verbatim, translit, codemix), supporting Global + Indian English and 22 Indic languages.
+    - name: mode
+      TYPE: STRUCT(SpeechToTextJobParameters_mode)
+      REQUIRED: false
+      DEFAULT: transcribe
+      comment: |-
+        Mode of operation. **Only applicable when using saaras:v3 or saaras:v4 models.**
+
+        Example audio: 'मेरा फोन नंबर है 9840950950'
+
+        - **transcribe** (default): Standard transcription in the original language with proper formatting and number normalization.
+          - Output: `मेरा फोन नंबर है 9840950950`
+
+        - **translate**: Translates speech from any supported Indic language to English.
+          - Output: `My phone number is 9840950950`
+
+        - **verbatim**: Exact word-for-word transcription without normalization, preserving filler words and spoken numbers as-is.
+          - Output: `मेरा फोन नंबर है नौ आठ चार zero नौ पांच zero नौ पांच zero`
+
+        - **translit**: Romanization - Transliterates speech to Latin/Roman script only.
+          - Output: `mera phone number hai 9840950950`
+
+        - **codemix**: Code-mixed text with English words in English and Indic words in native script.
+          - Output: `मेरा phone number है 9840950950`
+    - name: with_timestamps
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Whether to include timestamps in the response
+    - name: with_diarization
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Enables speaker diarization, which identifies and separates different speakers in the audio. In beta mode.
+    - name: num_speakers
+      TYPE: INT
+      REQUIRED: false
+      comment: Number of speakers to be detected in the audio. This is used when with_diarization is true.
+    - name: input_audio_codec
+      TYPE: STRING
+      REQUIRED: false
+      comment: Audio codec/format of uploaded files. The API automatically detects most formats; for PCM files (pcm_s16le, pcm_l16, pcm_raw), you must specify this parameter. PCM files are supported only at 16kHz sample rate.
+  BulkJobCallback:
+    - name: url
+      TYPE: STRING
+      REQUIRED: true
+      comment: Webhook url to call upon job completion
+    - name: auth_token
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: Authorization token required for the callback Url
+  BulkJobInitRequestV1_SpeechToTextJobParameters__callback:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_BulkJobCallback
+      TYPE: STRUCT(BulkJobCallback)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  BulkJobInitRequestV1_SpeechToTextJobParameters_:
+    - name: job_parameters
+      TYPE: STRUCT(SpeechToTextJobParameters)
+      REQUIRED: true
+      comment: Job Parameters for the bulk job
+    - name: callback
+      TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextJobParameters__callback)
+      REQUIRED: false
+      comment: Parameters for callback URL
+  BaseJobParameters:
+    - name: value
+      TYPE: ANY
+      REQUIRED: false
+  BulkJobInitResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job UUID.
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage Container Type
+    - name: job_parameters
+      TYPE: STRUCT(BaseJobParameters)
+      REQUIRED: true
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+  ErrorDetails:
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Message describing the error
+    - name: code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Error code for the specific error that has occurred. Refer to the error code documentation for more details.
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: "Unique identifier for the request. Format: date_UUID4"
+  ErrorMessage:
+    - name: error
+      TYPE: STRUCT(ErrorDetails)
+      REQUIRED: true
+      comment: Error details
+  FilesRequest:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: UUID of the bulk job returned from job initiation.
+    - name: files
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: "Required. Output filenames to download (e.g. \"0.json\"). Get these from the job status response: job_details[].outputs[].file_name after the job completes."
+  FilesUploadResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+    - name: upload_urls
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+  TaskFileDetails:
+    - name: file_name
+      TYPE: STRING
+      REQUIRED: true
+    - name: file_id
+      TYPE: STRING
+      REQUIRED: true
+  TaskDetail:
+    - name: inputs
+      TYPE: "[]STRUCT(TaskFileDetails)"
+      REQUIRED: false
+    - name: outputs
+      TYPE: "[]STRUCT(TaskFileDetails)"
+      REQUIRED: false
+    - name: state
+      TYPE: STRING
+      REQUIRED: false
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+    - name: exception_name
+      TYPE: STRING
+      REQUIRED: false
+  JobStatusResponse:
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job State
+    - name: created_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Created At
+    - name: updated_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Updated At
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job Id
+    - name: total_files
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Total Files
+    - name: successful_files_count
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Success Count
+    - name: failed_files_count
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Failed Count
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage Container Type
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: Error Message
+    - name: job_details
+      TYPE: "[]STRUCT(TaskDetail)"
+      REQUIRED: false
+      comment: Job details at file level.
+  FilesDownloadResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+    - name: download_urls
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+  SarvamModelApiTextToSpeechRequestText:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: STRING
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechRequest_speaker:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_TextToSpeechSpeaker
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechRequest_speech_sample_rate:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_SpeechSampleRate
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechRequest_output_audio_codec:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_TextToSpeechOutputAudioCodec
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechRequest:
+    - name: text
+      TYPE: STRUCT(SarvamModelApiTextToSpeechRequestText)
+      REQUIRED: true
+      comment: |-
+        The text(s) to be converted into speech.
+
+        **Features:**
+        - Supports code-mixed text (English and Indic languages)
+
+        **Model-specific limits:**
+        - **bulbul:v3:** Max 2500 characters
+        - **bulbul:v2:** Max 1500 characters
+
+        **Important Note:**
+        - For numbers larger than 4 digits, use commas (e.g., '10,000' instead of '10000')
+        - This ensures proper pronunciation as a whole number
+    - name: language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: The language code in BCP-47 format.
+    - name: speaker
+      TYPE: STRUCT(Sarvam_Model_API_TextToSpeechRequest_speaker)
+      REQUIRED: false
+      DEFAULT: shubh
+      comment: |-
+        The speaker voice to be used for the output audio.
+
+        **Default:** shubh (for bulbul:v3), anushka (for bulbul:v2)
+
+        **Model Compatibility (Speakers compatible with respective model):**
+        - **bulbul:v3:**
+          - shubh (default), aditya, ritu, priya, neha, rahul, pooja, rohan, simran, kavya, amit, dev, ishita, shreya, ratan, varun, manan, sumit, roopa, kabir, aayan, ashutosh, advait, anand, tanya, tarun, sunny, mani, gokul, vijay, shruti, suhani, mohit, kavitha, rehan, soham, rupali
+        - **bulbul:v2:**
+          - Female: anushka, manisha, vidya, arya
+          - Male: abhilash, karun, hitesh
+
+        **Note:** Speaker selection must match the chosen model version.
+
+        **Important:** Speaker names are case-sensitive and must be lowercase (e.g., `ritu` not `Ritu`).
+    - name: pitch
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |-
+        Controls the pitch of the audio. Lower values result in a deeper voice, while higher values make it sharper. The suitable range is between -0.75 and 0.75. Default is 0.0.
+
+        **Note:** This parameter is only supported for bulbul:v2. It is NOT supported for bulbul:v3.
+    - name: pace
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 1
+      comment: |-
+        Controls the speed of the audio. Lower values result in slower speech, while higher values make it faster. Default is 1.0.
+
+        **Model-specific ranges:**
+        - **bulbul:v3:** 0.5 to 2.0
+        - **bulbul:v2:** 0.3 to 3.0
+    - name: loudness
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |-
+        Controls the loudness of the audio. Lower values result in quieter audio, while higher values make it louder. The suitable range is between 0.3 and 3.0. Default is 1.0.
+
+        **Note:** This parameter is only supported for bulbul:v2. It is NOT supported for bulbul:v3.
+    - name: speech_sample_rate
+      TYPE: STRUCT(Sarvam_Model_API_TextToSpeechRequest_speech_sample_rate)
+      REQUIRED: false
+      DEFAULT: 22050
+      comment: |-
+        Specifies the sample rate of the output audio. Supported values are 8000, 16000, 22050, 24000, 32000, 44100, 48000 Hz.
+
+        **Note:** Higher sample rates (32000, 44100, 48000 Hz) are only available with bulbul:v3 via the REST API, not in streaming mode.
+
+        **Default:** 24000 Hz
+    - name: enable_preprocessing
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |-
+        Controls whether normalization of English words and numeric entities (e.g., numbers, dates) is performed. Set to true for better handling of mixed-language text.
+
+        **Model-specific behavior:**
+        - **bulbul:v3:** Not Supported
+        - **bulbul:v2:** Default is false
+    - name: model
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        Specifies the model to use for text-to-speech conversion.
+
+        **Available models:**
+        - **bulbul:v3:** Latest model with improved quality, 30+ voices, pace, and temperature control
+        - **bulbul:v2:** Legacy model with pitch, loudness, and pace controls
+    - name: output_audio_codec
+      TYPE: STRUCT(Sarvam_Model_API_TextToSpeechRequest_output_audio_codec)
+      REQUIRED: false
+      DEFAULT: wav
+      comment: Specifies the audio codec for the output audio file. Different codecs offer various compression and quality characteristics.
+    - name: temperature
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0.6
+      comment: |-
+        Temperature controls how much randomness and expressiveness the TTS model uses while generating speech.
+
+        Lower values produce more stable and consistent output, while higher values sound more expressive but may introduce artifacts or errors. The suitable range is between 0.01 and 2.0. Default is 0.6.
+
+        **Note:** This parameter is only supported for bulbul:v3. It has no effect on bulbul:v2.
+    - name: dict_id
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        The ID of a pronunciation dictionary to apply during synthesis. When provided, matching words in the input text will be replaced with their custom pronunciations before generating speech.
+
+        Create and manage dictionaries via the [Pronunciation Dictionary API](https://docs.sarvam.ai/api-reference-docs/pronunciation-dictionary/create). Only supported by **bulbul:v3**.
+    - name: enable_cached_responses
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |-
+        Enable caching for the request. When enabled, identical requests will return cached audio instead of regenerating. Default is false.
+
+        **Note:** Currently in beta and only available for bulbul:v1 and bulbul:v2 models.
+  Sarvam_Model_API_TextToSpeechResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: audios
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: " The output audio files in WAV format, encoded as base64 strings. Each string corresponds to one of the input texts."
+  Sarvam_Model_API_TextToSpeechStreamRequest_speaker:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_TextToSpeechSpeaker
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechStreamRequest_speech_sample_rate:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_SpeechSampleRate
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TextToSpeechStreamRequest:
+    - name: text
+      TYPE: STRING
+      REQUIRED: true
+      comment: |-
+        The text to be converted into streamed speech.
+
+        **Features:**
+        - Max 3500 characters
+        - Supports code-mixed text (English and Indic languages)
+
+        **Important Note:**
+        - For numbers larger than 4 digits, use commas (e.g., '10,000' instead of '10000')
+        - This ensures proper pronunciation as a whole number
+    - name: language_code
+      TYPE: STRING
+      REQUIRED: false
+      comment: The language code in BCP-47 format.
+    - name: speaker
+      TYPE: STRUCT(Sarvam_Model_API_TextToSpeechStreamRequest_speaker)
+      REQUIRED: false
+      comment: |-
+        The speaker voice to be used for the output audio.
+
+        **Default:** shubh (for bulbul:v3), anushka (for bulbul:v2)
+
+        **Note:** Speaker selection must match the chosen model version.
+
+        **Important:** Speaker names are case-sensitive and must be lowercase (e.g., `ritu` not `Ritu`).
+    - name: pitch
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |-
+        Controls the pitch of the audio. Range: -0.75 to 0.75. Default is 0.0.
+
+        **Note:** Only supported for bulbul:v2.
+    - name: pace
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 1
+      comment: |-
+        Controls the speed of the audio. Default is 1.0.
+
+        **Model-specific ranges:**
+        - **bulbul:v3:** 0.5 to 2.0
+        - **bulbul:v2:** 0.3 to 3.0
+    - name: loudness
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |-
+        Controls the loudness of the audio. Range: 0.3 to 3.0. Default is 1.0.
+
+        **Note:** Only supported for bulbul:v2.
+    - name: speech_sample_rate
+      TYPE: STRUCT(Sarvam_Model_API_TextToSpeechStreamRequest_speech_sample_rate)
+      REQUIRED: false
+      DEFAULT: 22050
+      comment: |-
+        Specifies the sample rate of the output audio. Default is 22050 Hz.
+
+        **Note:** OPUS codec only supports 8000, 12000, 16000, 24000, 48000 Hz.
+    - name: enable_preprocessing
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Controls whether normalization of English words and numeric entities is performed. Default is false.
+    - name: model
+      TYPE: STRING
+      REQUIRED: false
+      comment: Specifies the model to use for text-to-speech conversion. Default is bulbul:v2.
+    - name: temperature
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0.6
+      comment: |-
+        Controls the randomness of the output. Range: 0.01 to 1.0. Default is 0.6.
+
+        **Note:** Only supported for bulbul:v3.
+    - name: enable_cached_responses
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Enable caching for the request. Default is false. Currently in beta.
+    - name: dict_id
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        The ID of a pronunciation dictionary to apply during synthesis. When provided, matching words in the input text will be replaced with their custom pronunciations before generating speech.
+
+        Create and manage dictionaries via the [Pronunciation Dictionary API](https://docs.sarvam.ai/api-reference-docs/pronunciation-dictionary/create). Only supported by **bulbul:v3**.
+    - name: output_audio_codec
+      TYPE: STRING
+      REQUIRED: false
+      comment: Specifies the codec for the streamed output audio (e.g., 'mp3').
+    - name: output_audio_bitrate
+      TYPE: STRING
+      REQUIRED: false
+      comment: Bitrate for the streamed output audio. Default is '128k'.
+  Sarvam_Model_API_PronunciationDictionaryResponse:
+    - name: dictionary_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the created dictionary (e.g. `p_5cb7faa6`). Use this as the `dict_id` parameter in text-to-speech requests.
+  Sarvam_Model_API_PronunciationDictionaryGetResponse:
+    - name: dictionary_count
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of pronunciation dictionaries owned by the user.
+    - name: dictionaries
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: List of dictionary IDs.
+  Sarvam_Model_API_PronunciationDictionaryData:
+    - name: pronunciations
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+      comment: Pronunciation mappings organized by language code (e.g. `hi-IN`, `en-IN`). Each language maps words to their custom pronunciations.
+  Sarvam_Model_API_PronunciationDictionaryUpdateResponse:
+    - name: dictionary_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier of the updated dictionary.
+    - name: updated_pronunciations
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+      comment: "The new pronunciation data after the update, organized as `{language_code: {word: pronunciation}}`."
+  Sarvam_Model_API_PronunciationDictionaryDeleteResponse:
+    - name: success
+      TYPE: BOOL
+      REQUIRED: true
+      comment: Whether the deletion was successful.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Human-readable status message (e.g. "Dictionary 'p_5cb7faa6' deleted successfully").
+  Sarvam_Model_API_TranslationRequest_output_script:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_TransliterateMode
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_TranslationRequest:
+    - name: input
+      TYPE: STRING
+      REQUIRED: true
+      comment: The text you want to translate is the input text that will be processed by the translation model. The maximum is 1000 characters for Mayura:v1 and 2000 characters for Sarvam-Translate:v1.
+    - name: source_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: |+
+        Source language code for translation input.
+
+        **mayura:v1 Languages:** Bengali, English, Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu
+
+        **sarvam-translate:v1 Languages:** All mayura:v1 languages and Assamese, Bodo, Dogri, Konkani, Kashmiri, Maithili, Manipuri, Nepali, Sanskrit, Santali, Sindhi, Urdu
+
+        **Note:** mayura:v1 supports automatic language detection using 'auto' as the source language code.
+
+    - name: target_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: |+
+        The language code of the translated text. This specifies the target language for translation.
+
+        **mayura:v1 Languages:** Bengali, English, Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu
+
+        **sarvam-translate:v1 Languages:** All mayura:v1 and Assamese, Bodo, Dogri, Konkani, Kashmiri, Maithili, Manipuri, Nepali, Sanskrit, Santali, Sindhi, Urdu
+
+    - name: speaker_gender
+      TYPE: STRING
+      REQUIRED: false
+      comment: Please specify the gender of the speaker for better translations.
+    - name: mode
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        Specifies the tone or style of the translation.
+
+        **Model Support:**
+        - **mayura:v1**: Supports formal, classic-colloquial, modern-colloquial, and code-mixed modes
+        - **sarvam-translate:v1**: Only formal mode is supported
+
+        **Default:** formal
+    - name: model
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        Specifies the translation model to use.
+        - mayura:v1: Supports 12 languages with all modes, output scripts, and automatic language detection.
+        - sarvam-translate:v1: Supports all 22 scheduled languages of India, formal mode only.
+    - name: output_script
+      TYPE: STRUCT(Sarvam_Model_API_TranslationRequest_output_script)
+      REQUIRED: false
+      comment: |-
+        **output_script**: This is an optional parameter which controls the transliteration style applied to the output text.
+
+        **Transliteration**: Converting text from one script to another while preserving pronunciation.
+
+        For mayura:v1 - We support transliteration with four options:
+        - **`null`**(default): No transliteration applied.
+        - **`roman`**: Transliteration in Romanized script.
+        - **`fully-native`**: Transliteration in the native script with formal style.
+        - **`spoken-form-in-native`**: Transliteration in the native script with spoken style.
+
+        For sarvam-translate:v1 - Transliteration is not supported.
+        ### Example:
+        English: Your EMI of Rs. 3000 is pending.
+        Default modern translation: आपका Rs. 3000 का EMI pending है (when `null` is passed).
+
+        With postprocessing enabled:
+        - **roman output**: aapka Rs. 3000 ka EMI pending hai.
+    - name: numerals_format
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        `numerals_format` is an optional parameter with two options (supported for both mayura:v1 and sarvam-translate:v1):
+
+        - **`international`** (default): Uses regular numerals (0-9).
+        - **`native`**: Uses language-specific native numerals.
+
+        ### Example:
+        - If `international` format is selected, we use regular numerals (0-9). For example: `मेरा phone number है: 9840950950`.
+        - If `native` format is selected, we use language-specific native numerals, like: `मेरा phone number है: ९८४०९५०९५०`.
+  Sarvam_Model_API_TranslationResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: translated_text
+      TYPE: STRING
+      REQUIRED: true
+      comment: Translated text result in the requested target language.
+    - name: source_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Detected or provided source language of the input text.
+  Sarvam_Model_API_TransliterationRequest:
+    - name: input
+      TYPE: STRING
+      REQUIRED: true
+      comment: The text you want to transliterate.
+    - name: source_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: |+
+        The language code of the input text. This specifies the source language for transliteration.
+
+         Note:  The source language should either be an Indic language or English. As we supports both Indic-to-English and English-to-Indic transliteration.
+
+    - name: target_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: |+
+        The language code of the transliteration text. This specifies the target language for transliteration.
+
+         Note:The target language should either be an Indic language or English. As we supports both Indic-to-English and English-to-Indic transliteration.
+
+    - name: numerals_format
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        `numerals_format` is an optional parameter with two options:
+
+        - **`international`** (default): Uses regular numerals (0-9).
+        - **`native`**: Uses language-specific native numerals.
+
+        ### Example:
+        - If `international` format is selected, we use regular numerals (0-9). For example: `मेरा phone number है: 9840950950`.
+        - If `native` format is selected, we use language-specific native numerals, like: `मेरा phone number है: ९८४०९५०९५०`.
+    - name: spoken_form_numerals_language
+      TYPE: STRING
+      REQUIRED: false
+      comment: |+
+        `spoken_form_numerals_language` is an optional parameter with two options and only works when spoken_form is true:
+
+        - **`english`** : Numbers in the text will be spoken in English.
+        - **`native(default)`**: Numbers in the text will be spoken in the native language.
+
+        ### Examples:
+        - **Input:** "मेरे पास ₹200 है"
+          - If `english` format is selected: "मेरे पास टू हन्डर्ड रूपीस है"
+          - If `native` format is selected: "मेरे पास दो सौ रुपये है"
+
+    - name: spoken_form
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |2
+          - Default: `False`
+          - Converts text into a natural spoken form when `True`.
+          - **Note:** No effect if output language is `en-IN`.
+
+        ### Example:
+        - **Input:** `मुझे कल 9:30am को appointment है`
+          - **Output:** `मुझे कल सुबह साढ़े नौ बजे को अपॉइंटमेंट है`
+  Sarvam_Model_API_TransliterationResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: transliterated_text
+      TYPE: STRING
+      REQUIRED: true
+      comment: Transliterated text result in the requested target language.
+    - name: source_language_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Detected or provided source language of the input text.
+  Sarvam_Model_API_LanguageIdentificationRequest:
+    - name: input
+      TYPE: STRING
+      REQUIRED: true
+      comment: The text input for language and script identification. Max Input Limit is 1000 characters
+  Sarvam_Model_API_LanguageIdentificationResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: language_code
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        The detected language code of the input text.
+
+        Available languages:
+        - **`en-IN`**: English
+        - **`hi-IN`**: Hindi
+        - **`bn-IN`**: Bengali
+        - **`gu-IN`**: Gujarati
+        - **`kn-IN`**: Kannada
+        - **`ml-IN`**: Malayalam
+        - **`mr-IN`**: Marathi
+        - **`od-IN`**: Odia
+        - **`pa-IN`**: Punjabi
+        - **`ta-IN`**: Tamil
+        - **`te-IN`**: Telugu
+    - name: script_code
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        The detected script code of the input text.
+
+        Available scripts:
+        - **`Latn`**: Latin (Romanized script)
+        - **`Deva`**: Devanagari (Hindi, Marathi)
+        - **`Beng`**: Bengali
+        - **`Gujr`**: Gujarati
+        - **`Knda`**: Kannada
+        - **`Mlym`**: Malayalam
+        - **`Orya`**: Odia
+        - **`Guru`**: Gurmukhi
+        - **`Taml`**: Tamil
+        - **`Telu`**: Telugu
+  ChatCompletionRequestSystemMessage:
+    - name: content
+      TYPE: STRING
+      REQUIRED: true
+      comment: The contents of the system message.
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - system
+      comment: The role of the messages author, in this case `system`.
+  ImageURL_detail:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ImageUrlDetail
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  ImageURL:
+    - name: url
+      TYPE: STRING
+      REQUIRED: true
+    - name: detail
+      TYPE: STRUCT(ImageURL_detail)
+      REQUIRED: false
+      DEFAULT: auto
+  ChatCompletionRequestUserMessageContentOneOf1Items_variant_0:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - image_url
+    - name: image_url
+      TYPE: STRUCT(ImageURL)
+      REQUIRED: true
+  ChatCompletionRequestUserMessageContentOneOf1Items_variant_1:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - text
+    - name: text
+      TYPE: STRING
+      REQUIRED: true
+  ChatCompletionRequestUserMessageContentOneOf1Items:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+    - name: variant_0
+      TYPE: STRUCT(ChatCompletionRequestUserMessageContentOneOf1Items_variant_0)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: STRUCT(ChatCompletionRequestUserMessageContentOneOf1Items_variant_1)
+      REQUIRED: false
+  ChatCompletionRequestUserMessageContent:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestUserMessageContent1
+      TYPE: "[]STRUCT(ChatCompletionRequestUserMessageContentOneOf1Items)"
+      REQUIRED: false
+  ChatCompletionRequestUserMessage:
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - user
+      comment: The role of the messages author, in this case `user`.
+    - name: content
+      TYPE: STRUCT(ChatCompletionRequestUserMessageContent)
+      REQUIRED: true
+      comment: |
+        The contents of the user message.
+  ChatCompletionRequestAssistantMessage:
+    - name: content
+      TYPE: STRING
+      REQUIRED: false
+      comment: |
+        The contents of the assistant message
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - assistant
+      comment: The role of the messages author, in this case `assistant`.
+    - name: tool_calls
+      TYPE: ANY
+      REQUIRED: false
+      comment: The tool calls generated by the model.
+  ChatCompletionRequestToolMessage:
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - tool
+      comment: The role of the messages author, in this case `tool`.
+    - name: content
+      TYPE: STRING
+      REQUIRED: true
+      comment: The contents of the tool message.
+    - name: tool_call_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Tool call that this message is responding to.
+  ChatCompletionRequestGenericMessageContentOneOf1Items_variant_0:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - image_url
+    - name: image_url
+      TYPE: STRUCT(ImageURL)
+      REQUIRED: true
+  ChatCompletionRequestGenericMessageContentOneOf1Items_variant_1:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - text
+    - name: text
+      TYPE: STRING
+      REQUIRED: true
+  ChatCompletionRequestGenericMessageContentOneOf1Items:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+    - name: variant_0
+      TYPE: STRUCT(ChatCompletionRequestGenericMessageContentOneOf1Items_variant_0)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: STRUCT(ChatCompletionRequestGenericMessageContentOneOf1Items_variant_1)
+      REQUIRED: false
+  ChatCompletionRequestGenericMessageContent:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestGenericMessageContent1
+      TYPE: "[]STRUCT(ChatCompletionRequestGenericMessageContentOneOf1Items)"
+      REQUIRED: false
+  ChatCompletionRequestGenericMessage:
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      comment: The role of the messages author.
+    - name: content
+      TYPE: STRUCT(ChatCompletionRequestGenericMessageContent)
+      REQUIRED: true
+      comment: The contents of the message.
+    - name: name
+      TYPE: STRING
+      REQUIRED: false
+      comment: An optional name for the participant.
+  ChatCompletionRequestMessage:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestSystemMessage
+      TYPE: STRUCT(ChatCompletionRequestSystemMessage)
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestUserMessage
+      TYPE: STRUCT(ChatCompletionRequestUserMessage)
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestAssistantMessage
+      TYPE: STRUCT(ChatCompletionRequestAssistantMessage)
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestToolMessage
+      TYPE: STRUCT(ChatCompletionRequestToolMessage)
+      REQUIRED: false
+    - name: variant_ChatCompletionRequestGenericMessage
+      TYPE: STRUCT(ChatCompletionRequestGenericMessage)
+      REQUIRED: false
+  StopConfiguration:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_0
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "[]STRING"
+      REQUIRED: false
+  ChatCompletionNamedToolChoiceFunction:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: The name of the function to call.
+  ChatCompletionNamedToolChoice:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - function
+      comment: The type of the tool. Currently, only `function` is supported.
+    - name: function
+      TYPE: STRUCT(ChatCompletionNamedToolChoiceFunction)
+      REQUIRED: true
+  ToolChoiceOption:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ToolChoiceOption0
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_ChatCompletionNamedToolChoice
+      TYPE: STRUCT(ChatCompletionNamedToolChoice)
+      REQUIRED: false
+  JsonSchemaDefinition:
+    - name: name
+      TYPE: STRING
+      REQUIRED: true
+      comment: The name of the response format. Must contain only alphanumeric characters, underscores and dashes.
+    - name: description
+      TYPE: STRING
+      REQUIRED: false
+      comment: A description of what the response format is for, used by the model to determine how to respond in the format.
+    - name: schema
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+      comment: The schema for the response format, described as a JSON Schema object.
+    - name: strict
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Whether to enable strict schema adherence when generating the output.
+  ResponseFormat_variant_0:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - json_object
+      comment: The type of response format being defined. Always `json_object`.
+  ResponseFormat_variant_1:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - json_schema
+      comment: The type of response format being defined. Always `json_schema`.
+    - name: json_schema
+      TYPE: STRUCT(JsonSchemaDefinition)
+      REQUIRED: true
+      comment: Structured Outputs configuration options, including a JSON Schema.
+  ResponseFormat_variant_2:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - text
+      comment: The type of response format being defined. Always `text`.
+  ResponseFormat:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+    - name: variant_0
+      TYPE: STRUCT(ResponseFormat_variant_0)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: STRUCT(ResponseFormat_variant_1)
+      REQUIRED: false
+    - name: variant_2
+      TYPE: STRUCT(ResponseFormat_variant_2)
+      REQUIRED: false
+  CreateChatCompletionRequest_reasoning_effort:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ReasoningEffort
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionRequest_stop:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_StopConfiguration
+      TYPE: STRUCT(StopConfiguration)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionRequest_tool_choice:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ToolChoiceOption
+      TYPE: STRUCT(ToolChoiceOption)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionRequest_response_format:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ResponseFormat
+      TYPE: STRUCT(ResponseFormat)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionRequest:
+    - name: messages
+      TYPE: "[]STRUCT(ChatCompletionRequestMessage)"
+      REQUIRED: true
+      comment: A list of messages comprising the conversation so far.
+    - name: model
+      TYPE: STRING
+      REQUIRED: true
+      comment: Chat model ID. Use `sarvam-105b` (128K context) for complex reasoning and agentic tasks, or `sarvam-105b-conversations` for real-time conversational and voice-agent workloads.
+    - name: temperature
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0.2
+      comment: |
+        What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+        We generally recommend altering this or `top_p` but not both.
+    - name: top_p
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 1
+      comment: |
+        An alternative to sampling with temperature, called nucleus sampling,
+        where the model considers the results of the tokens with top_p probability
+        mass. So 0.1 means only the tokens comprising the top 10% probability mass
+        are considered.
+
+        We generally recommend altering this or `temperature` but not both.
+    - name: reasoning_effort
+      TYPE: STRUCT(CreateChatCompletionRequest_reasoning_effort)
+      REQUIRED: false
+      DEFAULT: medium
+      comment: The effort to use for reasoning. Can be disabled by explicitly setting to None. Default is 'medium'.
+    - name: max_tokens
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 2048
+      comment: The maximum number of tokens that can be generated in the chat completion.
+    - name: stream
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |-
+        If set to true, the model response data will be streamed to the client
+        as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+    - name: stop
+      TYPE: STRUCT(CreateChatCompletionRequest_stop)
+      REQUIRED: false
+    - name: "n"
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 1
+      comment: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+    - name: seed
+      TYPE: INT
+      REQUIRED: false
+      comment: |
+        This feature is in Beta.
+        If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+        Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+    - name: frequency_penalty
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+      comment: |
+        Number between -2.0 and 2.0. Positive values penalize new tokens based on
+        their existing frequency in the text so far, decreasing the model's
+        likelihood to repeat the same line verbatim.
+    - name: presence_penalty
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+      comment: |
+        Number between -2.0 and 2.0. Positive values penalize new tokens based on
+        whether they appear in the text so far, increasing the model's likelihood
+        to talk about new topics.
+    - name: wiki_grounding
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: If set to true, the model response will be wiki grounded.
+    - name: tools
+      TYPE: ANY
+      REQUIRED: false
+      comment: A list of tools the model may call. Currently, only functions are supported as a tool.
+    - name: tool_choice
+      TYPE: STRUCT(CreateChatCompletionRequest_tool_choice)
+      REQUIRED: false
+      comment: Controls which (if any) tool is called by the model.
+    - name: response_format
+      TYPE: STRUCT(CreateChatCompletionRequest_response_format)
+      REQUIRED: false
+      comment: "An object specifying the format that the model must output. Setting `{ \"type\": \"json_schema\", \"json_schema\": {...} }` enables Structured Outputs which guarantees the model generates output matching the supplied JSON Schema. Setting `{ \"type\": \"json_object\" }` enables the older JSON mode, which guarantees valid JSON but not a specific schema."
+  ChatCompletionResponseMessage:
+    - name: content
+      TYPE: STRING
+      REQUIRED: true
+      comment: The contents of the message.
+    - name: refusal
+      TYPE: STRING
+      REQUIRED: false
+    - name: reasoning_content
+      TYPE: STRING
+      REQUIRED: false
+      comment: The contents of the reasoning message.
+    - name: role
+      TYPE: STRING
+      REQUIRED: true
+      comment: The role of the author of this message.
+    - name: tool_calls
+      TYPE: ANY
+      REQUIRED: false
+      comment: The tool calls generated by the model.
+  Choice:
+    - name: finish_reason
+      TYPE: STRING
+      REQUIRED: true
+      comment: |
+        The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+        `length` if the maximum number of tokens specified in the request was reached,
+        `content_filter` if content was omitted due to a flag from our content filters,
+        `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    - name: index
+      TYPE: INT
+      REQUIRED: true
+      comment: The index of the choice in the list of choices.
+    - name: logprobs
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+    - name: message
+      TYPE: STRUCT(ChatCompletionResponseMessage)
+      REQUIRED: true
+  CompletionUsage:
+    - name: completion_tokens
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of tokens in the generated completion.
+    - name: prompt_tokens
+      TYPE: INT
+      REQUIRED: true
+      comment: Number of tokens in the prompt.
+    - name: total_tokens
+      TYPE: INT
+      REQUIRED: true
+      comment: Total number of tokens used in the request (prompt + completion).
+    - name: completion_tokens_details
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+    - name: prompt_tokens_details
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+  CreateChatCompletionResponse_usage:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_CompletionUsage
+      TYPE: STRUCT(CompletionUsage)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionResponse:
+    - name: id
+      TYPE: STRING
+      REQUIRED: true
+      comment: A unique identifier for the chat completion.
+    - name: choices
+      TYPE: "[]STRUCT(Choice)"
+      REQUIRED: true
+      comment: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+    - name: created
+      TYPE: INT
+      REQUIRED: true
+      comment: The Unix timestamp (in seconds) of when the chat completion was created.
+    - name: model
+      TYPE: STRING
+      REQUIRED: true
+      comment: The model used for the chat completion.
+    - name: object
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - chat.completion
+      comment: The object type, which is always `chat.completion`.
+    - name: service_tier
+      TYPE: STRING
+      REQUIRED: false
+    - name: system_fingerprint
+      TYPE: STRING
+      REQUIRED: false
+    - name: usage
+      TYPE: STRUCT(CreateChatCompletionResponse_usage)
+      REQUIRED: false
+  CreateChatCompletionV2Request_reasoning_effort:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ReasoningEffort
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionV2Request_stop:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_StopConfiguration
+      TYPE: STRUCT(StopConfiguration)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionV2Request_tool_choice:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ToolChoiceOption
+      TYPE: STRUCT(ToolChoiceOption)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionV2Request_response_format:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_ResponseFormat
+      TYPE: STRUCT(ResponseFormat)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionV2Request:
+    - name: messages
+      TYPE: "[]STRUCT(ChatCompletionRequestMessage)"
+      REQUIRED: true
+      comment: A list of messages comprising the conversation so far.
+    - name: model
+      TYPE: STRING
+      REQUIRED: true
+    - name: temperature
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |
+        What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+        We generally recommend altering this or `top_p` but not both.
+    - name: top_p
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 1
+      comment: |
+        An alternative to sampling with temperature, called nucleus sampling,
+        where the model considers the results of the tokens with top_p probability
+        mass. So 0.1 means only the tokens comprising the top 10% probability mass
+        are considered.
+
+        We generally recommend altering this or `temperature` but not both.
+    - name: reasoning_effort
+      TYPE: STRUCT(CreateChatCompletionV2Request_reasoning_effort)
+      REQUIRED: false
+      comment: The effort to use for reasoning
+    - name: max_tokens
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 2048
+      comment: The maximum number of tokens that can be generated in the chat completion.
+    - name: stream
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |-
+        If set to true, the model response data will be streamed to the client
+        as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+    - name: stop
+      TYPE: STRUCT(CreateChatCompletionV2Request_stop)
+      REQUIRED: false
+    - name: "n"
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 1
+      comment: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+    - name: seed
+      TYPE: INT
+      REQUIRED: false
+      comment: |
+        This feature is in Beta.
+        If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+        Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+    - name: frequency_penalty
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+      comment: |
+        Number between -2.0 and 2.0. Positive values penalize new tokens based on
+        their existing frequency in the text so far, decreasing the model's
+        likelihood to repeat the same line verbatim.
+    - name: presence_penalty
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      DEFAULT: 0
+      comment: |
+        Number between -2.0 and 2.0. Positive values penalize new tokens based on
+        whether they appear in the text so far, increasing the model's likelihood
+        to talk about new topics.
+    - name: tools
+      TYPE: ANY
+      REQUIRED: false
+      comment: A list of tools the model may call. Currently, only functions are supported as a tool.
+    - name: tool_choice
+      TYPE: STRUCT(CreateChatCompletionV2Request_tool_choice)
+      REQUIRED: false
+      comment: Controls which (if any) tool is called by the model.
+    - name: response_format
+      TYPE: STRUCT(CreateChatCompletionV2Request_response_format)
+      REQUIRED: false
+      comment: "An object specifying the format that the model must output. Setting `{ \"type\": \"json_schema\", \"json_schema\": {...} }` enables Structured Outputs which guarantees the model generates output matching the supplied JSON Schema. Setting `{ \"type\": \"json_object\" }` enables the older JSON mode, which guarantees valid JSON but not a specific schema."
+    - name: extra_body
+      TYPE: map[STRING]ANY
+      REQUIRED: false
+      DEFAULT: {}
+      comment: Extra body to be sent to the model.
+  CreateChatCompletionV2Response_usage:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_CompletionUsage
+      TYPE: STRUCT(CompletionUsage)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  CreateChatCompletionV2Response:
+    - name: id
+      TYPE: STRING
+      REQUIRED: true
+      comment: A unique identifier for the chat completion.
+    - name: choices
+      TYPE: "[]STRUCT(Choice)"
+      REQUIRED: true
+      comment: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+    - name: created
+      TYPE: INT
+      REQUIRED: true
+      comment: The Unix timestamp (in seconds) of when the chat completion was created.
+    - name: model
+      TYPE: STRING
+      REQUIRED: true
+      comment: The model used for the chat completion.
+    - name: object
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - chat.completion
+      comment: The object type, which is always `chat.completion`.
+    - name: service_tier
+      TYPE: STRING
+      REQUIRED: false
+    - name: system_fingerprint
+      TYPE: STRING
+      REQUIRED: false
+    - name: usage
+      TYPE: STRUCT(CreateChatCompletionV2Response_usage)
+      REQUIRED: false
+  ModelObject:
+    - name: id
+      TYPE: STRING
+      REQUIRED: true
+    - name: object
+      TYPE: STRING
+      REQUIRED: false
+      ENUM:
+        - model
+      DEFAULT: model
+    - name: created
+      TYPE: INT
+      REQUIRED: true
+    - name: owned_by
+      TYPE: STRING
+      REQUIRED: true
+  ModelListResponse:
+    - name: object
+      TYPE: STRING
+      REQUIRED: false
+      ENUM:
+        - list
+      DEFAULT: list
+    - name: data
+      TYPE: "[]STRUCT(ModelObject)"
+      REQUIRED: true
+  Sarvam_Creative_API_CreateDubbingJobRequest_pace_preset:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Creative_API_DubbingPacePreset
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Creative_API_CreateDubbingJobRequest_register:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Creative_API_DubbingRegister
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Creative_API_CreateDubbingJobRequest:
+    - name: src_lang
+      TYPE: STRING
+      REQUIRED: true
+      comment: Source language of the input media (BCP-47).
+    - name: target_langs
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: One or more target languages to dub into. A single job dubs into all of them.
+    - name: export_options
+      TYPE: "[]STRING"
+      REQUIRED: false
+      comment: Which formats to auto-produce per target language. When provided, only the listed formats are auto-exported. When omitted, the dubbed video, the isolated audio track, and an MP3 of that track are produced — but never SRT, which must be requested explicitly. Audio-only sources cannot produce a video, so `video` resolves to `audio` for them.
+    - name: voice_cloning
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: true
+      comment: Clone the original speaker's voice. Set `false` to use a preset `voice_id` instead.
+    - name: voice_id
+      TYPE: STRING
+      REQUIRED: false
+      comment: Preset (prebuilt) voice to use when `voice_cloning` is `false`. Single speaker only.
+    - name: pace_preset
+      TYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobRequest_pace_preset)
+      REQUIRED: false
+      comment: Speech pace preset, used when `voice_cloning` is false.
+    - name: num_speakers
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 1
+      comment: Number of speakers in the source audio.
+    - name: disable_watermark
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: Set `true` for a watermark-free export.
+    - name: register
+      TYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobRequest_register)
+      REQUIRED: false
+      comment: Translation-style / tone register.
+    - name: editor_flow
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: "Keep `false` for API integrations so exports fire automatically once TTS finishes. When `true`, auto-export is suppressed: the pipeline completes but `export-status` stays empty until exports are triggered manually in Creator Studio. **Billing:** `true` charges the editor-flow rate (₹80/min on Starter — double the default API rate). See Pricing for plan-specific rates."
+    - name: job_name
+      TYPE: STRING
+      REQUIRED: false
+      comment: Human-readable label to identify the job later. Recommended (e.g. the source file's name).
+  Sarvam_Creative_API_CreateDubbingJobData:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Unique identifier for the created dubbing job.
+    - name: upload_url
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Short-lived signed URL. `PUT` the raw media bytes here with headers `Content-Type: <mime>` and `x-ms-blob-type: BlockBlob` before starting the job."
+    - name: srt_upload_url
+      TYPE: STRING
+      REQUIRED: false
+      comment: Signed URL to upload a source SRT file, when applicable.
+    - name: expires_in_hours
+      TYPE: INT
+      REQUIRED: true
+      comment: How long the signed upload URL(s) remain valid, in hours.
+    - name: processing_started
+      TYPE: BOOL
+      REQUIRED: true
+      DEFAULT: false
+      comment: Whether processing has already begun for this job.
+    - name: voice_cloning
+      TYPE: BOOL
+      REQUIRED: true
+      DEFAULT: true
+    - name: voice_id
+      TYPE: STRING
+      REQUIRED: false
+    - name: pace_preset
+      TYPE: STRING
+      REQUIRED: false
+    - name: model_tier
+      TYPE: STRING
+      REQUIRED: false
+      comment: Echo of the requested quality tier (`plus`/`lite`), or null when the service default was used.
+  Sarvam_Creative_API_CreateDubbingJobResponse:
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Response status, e.g. `success`.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+    - name: data
+      TYPE: STRUCT(Sarvam_Creative_API_CreateDubbingJobData)
+      REQUIRED: true
+  Sarvam_Creative_API_DubbingStartData:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job status after starting, e.g. `processing`.
+    - name: task_id
+      TYPE: STRING
+      REQUIRED: false
+      comment: Identifier of the submitted pipeline task.
+  Sarvam_Creative_API_DubbingStartResponse:
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Response status, e.g. `success`.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Human-readable confirmation that the dubbing pipeline has started.
+    - name: data
+      TYPE: STRUCT(Sarvam_Creative_API_DubbingStartData)
+      REQUIRED: true
+  Sarvam_Creative_API_DubbingLiveStatusExportInfo:
+    - name: target_language
+      TYPE: STRING
+      REQUIRED: false
+      comment: Target language (BCP-47).
+    - name: status
+      TYPE: STRING
+      REQUIRED: false
+      comment: Export status, e.g. `completed`, `in_progress`, `failed`.
+    - name: dubbed_video_url
+      TYPE: STRING
+      REQUIRED: false
+      comment: Signed URL for the dubbed video.
+    - name: original_video_url
+      TYPE: STRING
+      REQUIRED: false
+      comment: Signed URL for the original video.
+    - name: duration
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: Video duration in seconds.
+    - name: file_size
+      TYPE: INT
+      REQUIRED: false
+      comment: File size in bytes.
+  Sarvam_Creative_API_DubbingLiveStatusData_export:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Creative_API_DubbingLiveStatusExportInfo
+      TYPE: STRUCT(Sarvam_Creative_API_DubbingLiveStatusExportInfo)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Creative_API_DubbingLiveStatusData:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: job_name
+      TYPE: STRING
+      REQUIRED: false
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+    - name: current_step
+      TYPE: STRING
+      REQUIRED: false
+      comment: Current pipeline step key.
+    - name: current_step_label
+      TYPE: STRING
+      REQUIRED: false
+      comment: Human-readable label of the current pipeline step.
+    - name: progress
+      TYPE: INT
+      REQUIRED: true
+      DEFAULT: 0
+      comment: Overall progress percentage (0–100).
+    - name: export
+      TYPE: STRUCT(Sarvam_Creative_API_DubbingLiveStatusData_export)
+      REQUIRED: false
+      comment: Export status when the job has a single target language.
+    - name: exports
+      TYPE: ANY
+      REQUIRED: false
+      comment: Export status per language when the job has multiple target languages.
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+      comment: Populated when `status` is `failed`.
+  Sarvam_Creative_API_DubbingLiveStatusResponse:
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Response status, e.g. `success`.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+    - name: data
+      TYPE: STRUCT(Sarvam_Creative_API_DubbingLiveStatusData)
+      REQUIRED: true
+  Sarvam_Creative_API_DubbingExportItem:
+    - name: id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Export record ID.
+    - name: export_type
+      TYPE: STRING
+      REQUIRED: true
+    - name: target_language
+      TYPE: STRING
+      REQUIRED: true
+      comment: The target language (BCP-47) of this export.
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+      comment: When the export was triggered.
+    - name: completed_at
+      TYPE: TIMESTAMP
+      REQUIRED: false
+      FORMAT: date-time
+      comment: When the export finished (if completed).
+    - name: is_stale
+      TYPE: BOOL
+      REQUIRED: true
+      DEFAULT: false
+      comment: True if translate chunks for this language were modified after the export completed, so the output no longer reflects the latest edits.
+    - name: download_url
+      TYPE: STRING
+      REQUIRED: false
+      comment: Signed, time-limited (~24h) download URL. Present once `status` is `completed`.
+  Sarvam_Creative_API_DubbingExportStatusData:
+    - name: exports
+      TYPE: "[]STRUCT(Sarvam_Creative_API_DubbingExportItem)"
+      REQUIRED: true
+      comment: One entry per (target_language, export_type).
+  Sarvam_Creative_API_DubbingExportStatusResponse:
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Response status, e.g. `success`.
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+    - name: data
+      TYPE: STRUCT(Sarvam_Creative_API_DubbingExportStatusData)
+      REQUIRED: true
+  DocAIPresignUploadRequest:
+    - name: content_type
+      TYPE: STRING
+      REQUIRED: false
+      comment: MIME type the client will PUT; when set, the upload's Content-Type header must match.
+  DocAIPresignUploadResponse:
+    - name: upload_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Handle for the uploaded file. Pass it through `upload_ids` on a later digitise or extract job request.
+    - name: method
+      TYPE: STRING
+      REQUIRED: true
+      comment: HTTP method to use for the upload (e.g. `PUT`).
+    - name: url
+      TYPE: STRING
+      REQUIRED: true
+      comment: Presigned URL to upload the file to.
+    - name: headers
+      TYPE: map[STRING]STRING
+      REQUIRED: false
+      comment: Headers that must be sent with the upload request.
+    - name: expires_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Timestamp after which the upload URL is no longer valid.
+  DocAIErrorModel:
+    - name: type
+      TYPE: STRING
+      REQUIRED: false
+      FORMAT: uri
+      DEFAULT: about:blank
+      comment: A URI reference to human-readable documentation for the error.
+    - name: title
+      TYPE: STRING
+      REQUIRED: false
+      comment: A short, human-readable summary of the problem type.
+    - name: status
+      TYPE: INT
+      REQUIRED: false
+      comment: HTTP status code.
+    - name: detail
+      TYPE: STRING
+      REQUIRED: false
+      comment: A human-readable explanation specific to this occurrence of the problem.
+    - name: instance
+      TYPE: STRING
+      REQUIRED: false
+      FORMAT: uri
+      comment: A URI reference that identifies the specific occurrence of the problem.
+    - name: errors
+      TYPE: ANY
+      REQUIRED: false
+      comment: Optional list of individual error details.
+  DocAIStartJobResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique identifier of the job.
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current status of the job.
+    - name: run_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique identifier of the job run.
+  DocAIUsage:
+    - name: pages_total
+      TYPE: INT
+      REQUIRED: false
+      comment: Total pages in the job.
+    - name: pages_processed
+      TYPE: INT
+      REQUIRED: false
+      comment: Pages processed so far.
+    - name: pages_succeeded
+      TYPE: INT
+      REQUIRED: false
+      comment: Pages processed successfully.
+    - name: pages_failed
+      TYPE: INT
+      REQUIRED: false
+      comment: Pages that failed processing.
+  DocAIJobStatusResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique identifier of the job.
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Current status of the job. Terminal statuses: `completed`, `partially_completed`, `failed`, `rejected`."
+    - name: pipeline
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Job pipeline: `digitise` or `extract`."
+    - name: usage
+      TYPE: STRUCT(DocAIUsage)
+      REQUIRED: true
+    - name: created_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job creation timestamp.
+    - name: updated_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Timestamp of the last job update.
+  DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingExtractResult:
+    - name: value
+      TYPE: ANY
+      REQUIRED: false
+  DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingExtractAnnotations:
+    - name: value
+      TYPE: ANY
+      REQUIRED: false
+  DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingDigitiseDocumentsItemsPagesItems:
+    - name: page_number
+      TYPE: INT
+      REQUIRED: false
+    - name: content
+      TYPE: STRING
+      REQUIRED: false
+      comment: Page content in the requested output_format (HTML or Markdown).
+  DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingDigitiseDocumentsItems:
+    - name: file_name
+      TYPE: STRING
+      REQUIRED: false
+    - name: pages
+      TYPE: "[]STRUCT(DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingDigitiseDocumentsItemsPagesItems)"
+      REQUIRED: false
+  docAI_get_results_Response_200_variant_0:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - extract
+      comment: "Discriminator value: extract"
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique identifier of the job.
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Terminal status of the job: `completed`, `partially_completed`, `failed`, or `rejected`."
+    - name: usage
+      TYPE: STRUCT(DocAIUsage)
+      REQUIRED: true
+    - name: result
+      TYPE: STRUCT(DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingExtractResult)
+      REQUIRED: true
+      comment: Structured field values, shaped by the schema or `config_id` used to create the job.
+    - name: annotations
+      TYPE: STRUCT(DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingExtractAnnotations)
+      REQUIRED: true
+      comment: Mirrors `result`, with each leaf replaced by its `confidence` and `sources`.
+    - name: version
+      TYPE: INT
+      REQUIRED: true
+      comment: Version of the schema or config used.
+  docAI_get_results_Response_200_variant_1:
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+      ENUM:
+        - digitise
+      comment: "Discriminator value: digitise"
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: The unique identifier of the job.
+    - name: status
+      TYPE: STRING
+      REQUIRED: true
+      comment: "Terminal status of the job: `completed`, `partially_completed`, `failed`, or `rejected`."
+    - name: usage
+      TYPE: STRUCT(DocAIUsage)
+      REQUIRED: true
+    - name: documents
+      TYPE: "[]STRUCT(DocAiV1JobJobIdResultsGetResponsesContentApplicationJsonSchemaDiscriminatorMappingDigitiseDocumentsItems)"
+      REQUIRED: true
+      comment: One entry per input document, each holding per-page content.
+  docAI_get_results_Response_200:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: type
+      TYPE: STRING
+      REQUIRED: true
+    - name: variant_0
+      TYPE: STRUCT(docAI_get_results_Response_200_variant_0)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: STRUCT(docAI_get_results_Response_200_variant_1)
+      REQUIRED: false
+  DocAIDownloadURLResponse:
+    - name: method
+      TYPE: STRING
+      REQUIRED: true
+      comment: HTTP method to use for the download (e.g. `GET`).
+    - name: url
+      TYPE: STRING
+      REQUIRED: true
+      comment: Presigned URL to download the job output from.
+    - name: headers
+      TYPE: map[STRING]STRING
+      REQUIRED: false
+      comment: Headers that must be sent with the download request.
+    - name: expires_at
+      TYPE: STRING
+      REQUIRED: true
+      comment: Timestamp after which the download URL is no longer valid.
+  Sarvam_Model_API_DiarizedEntry:
+    - name: transcript
+      TYPE: STRING
+      REQUIRED: true
+      comment: transcript of the segment of that audio
+    - name: start_time_seconds
+      TYPE: FLOAT
+      REQUIRED: true
+      FORMAT: double
+      comment: Start time of the word in seconds.
+    - name: end_time_seconds
+      TYPE: FLOAT
+      REQUIRED: true
+      FORMAT: double
+      comment: End time of the word in seconds.
+    - name: speaker_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Speaker ID for the word.
+  Sarvam_Model_API_DiarizedTranscript:
+    - name: entries
+      TYPE: "[]STRUCT(Sarvam_Model_API_DiarizedEntry)"
+      REQUIRED: true
+      comment: List of diarized transcript entries.
+  Sarvam_Model_API_SpeechToTextTranslateResponse_language_code:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_SpeechToTextTranslateLanguage
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_SpeechToTextTranslateResponse_diarized_transcript:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_DiarizedTranscript
+      TYPE: STRUCT(Sarvam_Model_API_DiarizedTranscript)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  Sarvam_Model_API_SpeechToTextTranslateResponse:
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: true
+    - name: transcript
+      TYPE: STRING
+      REQUIRED: true
+      comment: Transcript of the provided speech
+    - name: language_code
+      TYPE: STRUCT(Sarvam_Model_API_SpeechToTextTranslateResponse_language_code)
+      REQUIRED: true
+      comment: This will return the BCP-47 code of language spoken in the input. If multiple languages are detected, this will return language code of most predominant spoken language. If no language is detected, this will be null
+    - name: diarized_transcript
+      TYPE: STRUCT(Sarvam_Model_API_SpeechToTextTranslateResponse_diarized_transcript)
+      REQUIRED: false
+      comment: Diarized transcript of the provided speech. Always `null` on the REST API — diarization is only available via the Batch API.
+    - name: language_probability
+      TYPE: FLOAT
+      REQUIRED: false
+      FORMAT: double
+      comment: |-
+        Float value (0.0 to 1.0) indicating the probability of the detected language being correct. Higher values indicate higher confidence.
+
+        **When it returns a value:**
+        - When `language_code` is not provided in the request
+        - When `language_code` is set to `unknown`
+
+        **When it returns null:**
+        - When a specific `language_code` is provided (language detection is skipped)
+
+        The parameter is always present in the response.
+  SpeechToTextTranslateJobParameters:
+    - name: prompt
+      TYPE: STRING
+      REQUIRED: false
+      comment: Prompt to assist the transcription
+    - name: model
+      TYPE: STRING
+      REQUIRED: false
+      comment: |-
+        Model to be used for speech to text translation.
+
+        - **saaras:v2.5** (default): Translation model that translates audio from any spoken Indic language to English.
+          - Example: Hindi audio → English text output
+
+        For the latest model (saaras:v3), use the `/speech-to-text` endpoint with `mode="translate"`.
+    - name: with_diarization
+      TYPE: BOOL
+      REQUIRED: false
+      DEFAULT: false
+      comment: |-
+        Enables speaker diarization, which identifies and separates different speakers in the audio.
+         When set to true, the API will provide speaker-specific segments in the response.
+         Note: This parameter is currently in Beta mode.
+    - name: num_speakers
+      TYPE: INT
+      REQUIRED: false
+      comment: Number of speakers to be detected in the audio. This is used when with_diarization is set to true.
+    - name: input_audio_codec
+      TYPE: STRING
+      REQUIRED: false
+      comment: Audio codec/format of uploaded files. The API automatically detects most formats; for PCM files (pcm_s16le, pcm_l16, pcm_raw), you must specify this parameter. PCM files are supported only at 16kHz sample rate.
+  BulkJobInitRequestV1_SpeechToTextTranslateJobParameters__callback:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_BulkJobCallback
+      TYPE: STRUCT(BulkJobCallback)
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false
+  BulkJobInitRequestV1_SpeechToTextTranslateJobParameters_:
+    - name: job_parameters
+      TYPE: STRUCT(SpeechToTextTranslateJobParameters)
+      REQUIRED: true
+      comment: Job Parameters for the bulk job
+    - name: callback
+      TYPE: STRUCT(BulkJobInitRequestV1_SpeechToTextTranslateJobParameters__callback)
+      REQUIRED: false
+      comment: Parameters for callback URL
+  DocDigitizationJobParameters:
+    - name: language
+      TYPE: STRING
+      REQUIRED: false
+      comment: Primary language of the document in BCP-47 format (e.g. en-IN, hi-IN). Use this field name — not language_code (which other Sarvam APIs use). Sending language_code is ignored and defaults to hi-IN.
+    - name: output_format
+      TYPE: STRING
+      REQUIRED: false
+      comment: "Output format for the extracted content (delivered as a ZIP file). Accepted values: md, html, json. Use md for Markdown — not markdown (returns 400)."
+  DocDigitizationCreateJobRequest:
+    - name: job_parameters
+      TYPE: STRUCT(DocDigitizationJobParameters)
+      REQUIRED: false
+      comment: Configuration parameters for the Document Intelligence job including language and output format. Defaults to Hindi (hi-IN) and Markdown output if omitted.
+  DocDigitizationCreateJobResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: uuid
+      comment: Unique job identifier (UUID)
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage Container Type
+    - name: job_parameters
+      TYPE: STRUCT(DocDigitizationJobParameters)
+      REQUIRED: true
+      comment: "  Job configuration parameters"
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+  DocDigitizationErrorDetails:
+    - name: message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Message describing the error
+    - name: code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Error code for the specific error that has occurred.
+    - name: request_id
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: "Unique identifier for the request. Format: date_UUID4"
+  DocDigitizationErrorMessage:
+    - name: error
+      TYPE: STRUCT(DocDigitizationErrorDetails)
+      REQUIRED: true
+      comment: Error details
+  DocDigitizationUploadFilesRequest:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      comment: Job identifier returned from Create Job
+    - name: files
+      TYPE: "[]STRING"
+      REQUIRED: true
+      comment: "List of filenames to upload (exactly 1 file: PDF or ZIP)"
+  DocDigitizationUploadFilesResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: uuid
+      comment: Job identifier
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current job state
+    - name: upload_urls
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+      comment: Map of filename to presigned upload URL details
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage backend type
+  DocDigitizationPageError:
+    - name: page_number
+      TYPE: INT
+      REQUIRED: true
+      comment: Page number that failed
+    - name: error_code
+      TYPE: STRING
+      REQUIRED: true
+      comment: Standardized error code
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: true
+      comment: Human-readable error description
+  DocDigitizationJobDetail:
+    - name: inputs
+      TYPE: "[]STRUCT(TaskFileDetails)"
+      REQUIRED: true
+      comment: Input file(s) for this task
+    - name: outputs
+      TYPE: "[]STRUCT(TaskFileDetails)"
+      REQUIRED: true
+      comment: Output file(s) produced
+    - name: state
+      TYPE: STRING
+      REQUIRED: true
+      comment: Processing state for this file
+    - name: total_pages
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Total pages/images in the input file
+    - name: pages_processed
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Number of pages processed so far
+    - name: pages_succeeded
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Number of pages successfully processed
+    - name: pages_failed
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Number of pages that failed processing
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: Error message if processing failed
+    - name: error_code
+      TYPE: STRING
+      REQUIRED: false
+      comment: Standardized error code if failed
+    - name: page_errors
+      TYPE: "[]STRUCT(DocDigitizationPageError)"
+      REQUIRED: false
+      comment: Detailed errors for each failed page
+  DocDigitizationJobStatusResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: uuid
+      comment: Job identifier (UUID)
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current job state
+    - name: created_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Job creation timestamp (ISO 8601)
+    - name: updated_at
+      TYPE: TIMESTAMP
+      REQUIRED: true
+      FORMAT: date-time
+      comment: Last update timestamp (ISO 8601)
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage backend type
+    - name: total_files
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Total input files (always 1)
+    - name: successful_files_count
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Files that completed successfully
+    - name: failed_files_count
+      TYPE: INT
+      REQUIRED: false
+      DEFAULT: 0
+      comment: Files that failed
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+      DEFAULT: ""
+      comment: Job-level error message
+    - name: job_details
+      TYPE: "[]STRUCT(DocDigitizationJobDetail)"
+      REQUIRED: false
+      comment: Per-file processing details with page metrics
+  DocDigitizationDownloadFilesResponse:
+    - name: job_id
+      TYPE: STRING
+      REQUIRED: true
+      FORMAT: uuid
+      comment: Job identifier (UUID)
+    - name: job_state
+      TYPE: STRING
+      REQUIRED: true
+      comment: Current job state
+    - name: storage_container_type
+      TYPE: STRING
+      REQUIRED: true
+      comment: Storage backend type
+    - name: download_urls
+      TYPE: map[STRING]ANY
+      REQUIRED: true
+      comment: Map of filename to presigned download URL details
+    - name: error_code
+      TYPE: STRING
+      REQUIRED: false
+    - name: error_message
+      TYPE: STRING
+      REQUIRED: false
+  transcribe_post_speech_to_text_2a3dffaeRequest_mode:
+    - name: _COMPOSITION
+      TYPE: ONE_OF
+      REQUIRED: false
+    - name: variant_Sarvam_Model_API_Mode
+      TYPE: STRING
+      REQUIRED: false
+    - name: variant_1
+      TYPE: "NULL"
+      REQUIRED: false

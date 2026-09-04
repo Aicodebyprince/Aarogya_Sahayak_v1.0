@@ -46,6 +46,10 @@ services:
         value: mock
       - key: ABDM_MODE
         value: mock
+      - key: SWYTCHCODE_MODE
+        value: mock
+      - key: SWYTCHCODE_API_KEY
+        sync: false
       # Optional live keys (add later via dashboard when needed)
 
 databases:

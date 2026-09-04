@@ -2332,6 +2332,30 @@ export class AarogyaApiClient {
       idempotency_key: idempotencyKey
     });
   }
+
+  // Swytchcode Governance & Tool Execution Methods
+  getSwytchcodeStatus() {
+    return this.get<any>("/swytchcode/status");
+  }
+
+  executeSwytchcodeTool(payload: {
+    tool_name: string;
+    case_id?: string;
+    priority?: string;
+    clinical_condition?: string;
+    systolic_bp?: number;
+    diastolic_bp?: number;
+    spo2?: number;
+    is_pregnant?: boolean;
+    gestational_weeks?: number;
+    language_code?: string;
+  }) {
+    return this.post<any>("/swytchcode/execute-tool", payload);
+  }
+
+  getSwytchcodeHistory() {
+    return this.get<any>("/swytchcode/history");
+  }
 }
 
 
