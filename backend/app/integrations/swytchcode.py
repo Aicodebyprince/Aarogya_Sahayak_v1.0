@@ -51,7 +51,7 @@ class SwytchcodeAdapter(BaseIntegrationAdapter):
         self.api_key = settings.SWYTCHCODE_API_KEY
         self.base_url = "https://api-v2.swytchcode.com"
         self.dashboard_url = "https://app.swytchcode.com/dashboard/overview"
-        self.account_email = "princesher321@gmail.com"
+        self.account_email = getattr(settings, "SWYTCHCODE_ACCOUNT", "admin@aarogyasahayak.in")
         self._idempotency_cache: Dict[str, Dict[str, Any]] = {}
         self._execution_history: List[Dict[str, Any]] = []
         self.exec_path = "NONE"
@@ -97,6 +97,19 @@ class SwytchcodeAdapter(BaseIntegrationAdapter):
     @property
     def is_mock(self) -> bool:
         return self.mode.lower() == "mock" or not self.api_key
+
+    @property
+    def kernel_live(self) -> bool:
+        """
+        True when real kernel execution is possible: Runtime SDK loaded +
+        at least one registered method + credentials connected via CLI auth.
+        Project mode governs whether callers route through the kernel.
+        """
+        return (
+            self.mode.lower() == "live"
+            and self.sdk_client is not None
+            and bool(self.registered_methods)
+        )
 
     def kernel_execute(
         self,

@@ -3,7 +3,7 @@
 > **Hackathon Track**: AI Agent Tool Execution, API Governance & Developer Experience  
 > **Project**: Aarogya Sahayak (AI-Powered Voice-First Rural Healthcare Platform for India)  
 > **Sponsor Platform**: [Swytchcode (app.swytchcode.com)](https://app.swytchcode.com/dashboard/overview)  
-> **Account**: `princesher321@gmail.com`
+> **Deployment**: Production & Staging (Render Singapore + Vercel)
 
 ---
 

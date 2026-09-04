@@ -43,7 +43,7 @@ Use this playbook to deliver a high-impact, 2-minute pitch to the hackathon judg
 
 1. **Before Pitching**:
    - Open Tab 1: Aarogya Sahayak Citizen Mobile (`http://localhost:5173` or production URL).
-   - Open Tab 2: [Swytchcode Dashboard Overview](https://app.swytchcode.com/dashboard/overview) logged in as `princesher321@gmail.com`.
+   - Open Tab 2: [Swytchcode Dashboard Overview](https://app.swytchcode.com/dashboard/overview).
    - Open Tab 3: Healthcare Portal / Doctor Dashboard.
 
 2. **Triggering the Demo Flow**:

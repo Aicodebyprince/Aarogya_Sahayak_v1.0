@@ -2,9 +2,9 @@
 
 > **Target Audience**: Hackathon Judges, Evaluators & Technical Mentors  
 > **Sponsor Platform**: [Swytchcode (app.swytchcode.com)](https://app.swytchcode.com/dashboard/overview)  
-> **Registered Account**: `princesher321@gmail.com`  
+> **Environment**: Staging & Production (Render Singapore + Vercel)  
 > **CLI Workspace**: `calm-meadow-c150` (`85ab6d86-dd8c-41f2-ad8d-f310d3cfa936`)  
-> **Printable PDF Presentation**: [SWYTCHCODE_INTEGRATION_SHOWCASE.html](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/SWYTCHCODE_INTEGRATION_SHOWCASE.html) *(Open in Chrome/Edge and press Ctrl+P to save as PDF)*
+> **Official PDF Whitepaper**: [AarogyaSahayak_Swytchcode_Architecture_and_Proof.pdf](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/AarogyaSahayak_Swytchcode_Architecture_and_Proof.pdf)
 
 ---
 
@@ -72,7 +72,7 @@ curl -X GET "https://your-backend.onrender.com/api/swytchcode/status"
   "status": "LIVE_CONNECTED",
   "mode": "LIVE",
   "live_connected": true,
-  "account": "princesher321@gmail.com",
+  "account": "admin@aarogyasahayak.in",
   "workspace_alias": "calm-meadow-c150",
   "workspace_uuid": "85ab6d86-dd8c-41f2-ad8d-f310d3cfa936",
   "cli_workspace_linked": true,
@@ -175,7 +175,7 @@ Google Gemini (google-genai)   | FALLBACK   | BLOCKED_BY_CREDENTIALS   | Pydanti
 Lyzr Multi-Agent Orchestrator  | LOCAL_FALLBACK | LOCAL_SERVICE_VERIFIED | 4-agent execution sequence passing
 Sarvam Voice STT/TTS           | MOCK       | BLOCKED_BY_CREDENTIALS   | Sarvam ASR Marathi/Hindi speech translator active
 n8n Workflow Automation        | LIVE       | LOCAL_SERVICE_VERIFIED   | HMAC SHA-256 webhook dispatcher operational
-Swytchcode AI Tool Execution   | LIVE       | LIVE_CONNECTED           | Account: princesher321@gmail.com; Governs ASHA dispatch, Sarvam Voice & Idempotency
+Swytchcode AI Tool Execution   | LIVE       | LIVE_CONNECTED           | Governs ASHA dispatch, Sarvam Voice & Idempotency
 ```
 
 ---
@@ -201,7 +201,6 @@ Follow this exact sequence on stage:
   * **Tool**: `dispatch_emergency_asha_alert`
   * **Status**: `200 OK`
   * **Trace ID**: Matching the ID displayed in the app
-  * **Account**: `princesher321@gmail.com`
 * Say: *"Here is the live proof. The LLM never held an API key. Swytchcode validated the clinical schema, isolated patient PII, and enforced an idempotency lock before touching the network."*
 
 ---
