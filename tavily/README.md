@@ -54,7 +54,6 @@ This directory contains the complete Tavily integration suite, technical bluepri
 | [BEFORE_VS_AFTER.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/BEFORE_VS_AFTER.md) | Exhaustive breakdown: How we handled scheme data before Tavily vs. how Tavily solves it with real-world case studies. |
 | [INTEGRATION_ARCHITECTURE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/INTEGRATION_ARCHITECTURE.md) | Deep technical architecture detailing the Multi-Agent tri-factor (Milvus RAG + Neo4j Graph + Tavily Search). |
 | [LIVE_VERIFICATION_AND_DEMO_GUIDE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/LIVE_VERIFICATION_AND_DEMO_GUIDE.md) | Step-by-step video shooting script, recording walkthrough, terminal commands, and talking points. |
-| [PITCH_AND_DEMO_GUIDE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/PITCH_AND_DEMO_GUIDE.md) | 2-minute judge/mentor pitch script, live dashboard walkthrough, and anticipated technical Q&A. |
 | [TAVILY_INTEGRATION_SHOWCASE.html](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/TAVILY_INTEGRATION_SHOWCASE.html) | Interactive HTML showcase demonstrating live tests, domain guards, and before/after comparisons. |
 | [tavily_manifest.json](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/tavily/tavily_manifest.json) | Production integration manifest containing approved domain lists, endpoints, and governance settings. |
 

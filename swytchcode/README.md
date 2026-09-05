@@ -46,9 +46,12 @@ This directory contains the complete Swytchcode integration documentation and ex
 
 | File | Description |
 |---|---|
+| [AarogyaSahayak_Swytchcode_Architecture_and_Proof.pdf](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/AarogyaSahayak_Swytchcode_Architecture_and_Proof.pdf) | **Publication-Grade PDF Whitepaper**: Executive architectural specification, Before vs After matrix, and live proof. |
+| [AarogyaSahayak_Swytchcode_Architecture_and_Proof.docx](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/AarogyaSahayak_Swytchcode_Architecture_and_Proof.docx) | **Editable Word Whitepaper**: Formatted DOCX version for submission portals and grant reviewers. |
 | [BEFORE_VS_AFTER.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/BEFORE_VS_AFTER.md) | In-depth breakdown of our architectural evolution: How we handled external integrations before vs. how Swytchcode solves it 10x better. |
 | [INTEGRATION_ARCHITECTURE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/INTEGRATION_ARCHITECTURE.md) | Technical blueprint detailing the Multi-Agent Orchestrator, Sarvam AI Voice Gateway, and Swytchcode Adapter flow. |
-| [PITCH_AND_DEMO_GUIDE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/PITCH_AND_DEMO_GUIDE.md) | 2-minute judge pitch script, live dashboard walkthrough on `app.swytchcode.com`, and judge Q&A preparation. |
+| [LIVE_VERIFICATION_AND_DEMO_GUIDE.md](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/LIVE_VERIFICATION_AND_DEMO_GUIDE.md) | Step-by-step video shooting script, recording walkthrough, and terminal commands. |
+| [SWYTCHCODE_INTEGRATION_SHOWCASE.html](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/SWYTCHCODE_INTEGRATION_SHOWCASE.html) | Interactive HTML showcase demonstrating live tests and dashboard telemetry. |
 | [tooling.json](file:///c:/Users/princ/Downloads/AarogyaSahayak-main/AarogyaSahayak-main/swytchcode/tooling.json) | Production Swytchcode tool manifest defining schemas, policies, and retry bounds for all healthcare tools. |
 
 ---
