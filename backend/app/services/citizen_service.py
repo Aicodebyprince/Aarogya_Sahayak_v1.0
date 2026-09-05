@@ -1500,11 +1500,16 @@ class CitizenService:
         
         if not assigned_asha_user:
             # Check village mapping for ASHA
-            mapped_asha = db.query(User).filter(or_(User.role == "ASHA_WORKER", User.role == "ASHA"), User.is_active == True).first()
-            if mapped_asha and ((profile.village_name and "Kalyanpur" in profile.village_name) or not profile.village_name):
+            mapped_asha = db.query(User).filter(
+                or_(User.role == UserRoleEnum.ASHA_WORKER, User.role == "ASHA_WORKER", User.role == "ASHA"),
+                User.is_active == True
+            ).first()
+            if mapped_asha:
                 assigned_asha_user = mapped_asha
-                assigned_asha_name = f"{mapped_asha.name} (Kalyanpur)"
+                assigned_asha_name = f"{mapped_asha.name} ({profile.village_name or 'Kalyanpur'})"
                 init_status = "ASHA_ASSIGNED"
+                if not profile.assigned_asha_id:
+                    profile.assigned_asha_id = mapped_asha.id
 
         # 2. Search or create compatible Case
         case = None
@@ -1643,7 +1648,7 @@ class CitizenService:
         )
         db.add(follow_up)
 
-        # 8. Publish Domain Event
+        # 8. Publish Domain Events
         from app.services.event_bus import publish_domain_event
         publish_domain_event(
             event_name="CITIZEN_ASHA_REQUEST_SUBMITTED",
@@ -1657,6 +1662,15 @@ class CitizenService:
                 "assigned_asha_id": assigned_asha_user.id if assigned_asha_user else None,
                 "recipient_role": "ASHA_WORKER",
                 "status": init_status,
+                "timestamp": utc_now().isoformat()
+            }
+        )
+        publish_domain_event(
+            event_name="CASE_ASSIGNED",
+            payload={
+                "case_id": case.id,
+                "assigned_asha_id": assigned_asha_user.id if assigned_asha_user else None,
+                "reference": case.reference,
                 "timestamp": utc_now().isoformat()
             }
         )

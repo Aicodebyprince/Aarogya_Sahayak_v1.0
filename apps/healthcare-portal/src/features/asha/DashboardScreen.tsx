@@ -50,6 +50,7 @@ export function AshaDashboardScreen() {
         "FOLLOW_UP_ASSIGNED",
         "CONSULTATION_COMPLETED",
         "CASE_ASSIGNED",
+        "CITIZEN_ASHA_REQUEST_SUBMITTED",
         "VISIT_COMPLETED",
         "SYNC_COMPLETED",
         "REFERRAL_CREATED",

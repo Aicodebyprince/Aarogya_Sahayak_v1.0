@@ -971,6 +971,30 @@ function SchemeCard({
   onSendSms: () => void;
 }) {
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [tavilyLoading, setTavilyLoading] = useState(false);
+  const [tavilyResult, setTavilyResult] = useState<any>(null);
+
+  const handleTavilyVerify = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTavilyLoading(true);
+    try {
+      const res: any = await apiClient.request<any>("/ai/tavily/verify", {
+        method: "POST",
+        body: JSON.stringify({
+          query: `${scheme.canonical_name || scheme.short_name} official guidelines scheme`
+        })
+      });
+      setTavilyResult(res?.data || res);
+    } catch (err) {
+      setTavilyResult({
+        verified: false,
+        status: "ERROR",
+        reason: "Tavily service query timed out or network error."
+      });
+    } finally {
+      setTavilyLoading(false);
+    }
+  };
 
   const getStatusBadge = () => {
     switch (scheme.status) {
@@ -1224,7 +1248,7 @@ function SchemeCard({
 
       {/* Action Buttons Footer */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14, flexWrap: "wrap", gap: 10 }}>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           {isEligibleOrService && (
             <button
               onClick={onSendSms}
@@ -1245,6 +1269,34 @@ function SchemeCard({
               📱 Send Scheme Guidance SMS
             </button>
           )}
+
+          {/* Tavily Live Official Verification Button */}
+          <button
+            onClick={handleTavilyVerify}
+            disabled={tavilyLoading}
+            title="Verify official guidelines against Indian government whitelist via Tavily"
+            style={{
+              padding: "7px 12px",
+              backgroundColor: tavilyResult?.verified ? "#F0FDF4" : "#F8FAFC",
+              border: tavilyResult?.verified ? "1px solid #86EFAC" : "1px solid #CBD5E1",
+              borderRadius: 6,
+              color: tavilyResult?.verified ? "#166534" : "#1E293B",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: tavilyLoading ? "wait" : "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6
+            }}
+          >
+            {tavilyLoading ? (
+              <span>🔍 Verifying with Tavily AI...</span>
+            ) : tavilyResult?.verified ? (
+              <span>🟢 Verified ({tavilyResult.domain || "gov.in"})</span>
+            ) : (
+              <span>⚡ Live Verify via Tavily AI</span>
+            )}
+          </button>
 
           {scheme.official_application_url ? (
             <a
@@ -1305,6 +1357,65 @@ function SchemeCard({
           {expanded ? "▲ Less Details" : "▼ Documents & Application Steps"}
         </button>
       </div>
+
+      {/* Tavily Verification Result Banner */}
+      {tavilyResult && (
+        <div
+          style={{
+            marginTop: 12,
+            padding: "10px 14px",
+            borderRadius: 8,
+            backgroundColor: tavilyResult.verified ? "#F0FDF4" : "#FEF2F2",
+            border: tavilyResult.verified ? "1px solid #86EFAC" : "1px solid #FCA5A5",
+            fontSize: 12,
+            display: "flex",
+            flexDirection: "column",
+            gap: 4
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 700, color: tavilyResult.verified ? "#166534" : "#991B1B" }}>
+              <span>{tavilyResult.verified ? "✓ Live Verified Official Govt Source" : "⚠️ Verification Guard Notice"}</span>
+              <span
+                style={{
+                  fontSize: 11,
+                  padding: "2px 8px",
+                  borderRadius: 6,
+                  backgroundColor: tavilyResult.verified ? "#DCFCE7" : "#FEE2E2",
+                  color: tavilyResult.verified ? "#15803D" : "#B91C1C",
+                  fontWeight: 800
+                }}
+              >
+                Tavily AI Engine · {tavilyResult.status}
+              </span>
+            </div>
+            <span style={{ fontSize: 11, color: "#64748B" }}>
+              Domain Whitelist Enforced (.gov.in / .nic.in)
+            </span>
+          </div>
+
+          {tavilyResult.url && (
+            <div style={{ fontSize: 12, color: "#166534", marginTop: 2 }}>
+              Official Source:{" "}
+              <a href={tavilyResult.url} target="_blank" rel="noreferrer" style={{ color: "#15803D", fontWeight: 700, textDecoration: "underline" }}>
+                {tavilyResult.title || tavilyResult.url} ({tavilyResult.domain})
+              </a>
+            </div>
+          )}
+
+          {tavilyResult.content && (
+            <div style={{ fontSize: 11, color: "#475569", marginTop: 2, lineHeight: 1.4, backgroundColor: "rgba(255,255,255,0.6)", padding: "6px 8px", borderRadius: 4 }}>
+              "{tavilyResult.content}..."
+            </div>
+          )}
+
+          {tavilyResult.reason && (
+            <div style={{ fontSize: 12, color: "#991B1B", marginTop: 2 }}>
+              {tavilyResult.reason}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

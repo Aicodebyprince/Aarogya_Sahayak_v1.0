@@ -210,3 +210,42 @@ def get_integrations_health(db: Session = Depends(get_db)):
         }
     ]
     return StandardResponse(data=health_data)
+
+
+class TavilyVerifyInput(BaseModel):
+    query: str = "Pradhan Mantri Matru Vandana Yojana"
+    candidate_url: Optional[str] = None
+
+
+@router.post("/tavily/verify", response_model=StandardResponse)
+def verify_official_source_post(payload: TavilyVerifyInput):
+    """
+    Execute live Tavily web search with strict Indian government official-domain allowlist verification.
+    """
+    from app.ai.providers.tavily_service import tavily_service
+    res = tavily_service.verify_official_update(query=payload.query, candidate_url=payload.candidate_url)
+    return StandardResponse(data={
+        **res,
+        "mode": tavily_service.get_mode(),
+        "is_live": tavily_service.is_live,
+        "approved_domains": sorted(list(tavily_service.APPROVED_DOMAINS))
+    })
+
+
+@router.get("/tavily/verify", response_model=StandardResponse)
+def verify_official_source_get(
+    query: str = "Pradhan Mantri Matru Vandana Yojana",
+    candidate_url: Optional[str] = None
+):
+    """
+    Execute live Tavily web search via GET request for demonstration & testing.
+    """
+    from app.ai.providers.tavily_service import tavily_service
+    res = tavily_service.verify_official_update(query=query, candidate_url=candidate_url)
+    return StandardResponse(data={
+        **res,
+        "mode": tavily_service.get_mode(),
+        "is_live": tavily_service.is_live,
+        "approved_domains": sorted(list(tavily_service.APPROVED_DOMAINS))
+    })
+

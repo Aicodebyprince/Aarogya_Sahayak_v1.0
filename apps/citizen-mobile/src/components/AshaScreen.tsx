@@ -12,19 +12,22 @@ export const AshaScreen: React.FC<AshaScreenProps> = ({ onBack }) => {
   const [reason, setReason] = useState("Home visit requested for pregnancy health checkup.");
   const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleRequestAsha = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       await apiClient.createCitizenAshaRequest({
         reason: reason,
         urgency: "ROUTINE",
+        assistance_type: "HOME_VISIT",
         idempotency_key: `ASHA-REQ-${Date.now()}`
       });
       setRequested(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to request ASHA visit", err);
-      setRequested(true);
+      setErrorMsg(err?.message || "Could not connect to ASHA service. Please check your network.");
     } finally {
       setLoading(false);
     }
@@ -101,7 +104,7 @@ export const AshaScreen: React.FC<AshaScreenProps> = ({ onBack }) => {
               gap: 6
             }}
           >
-            <Home size={16} /> {t("navigation.field_visits", "Request Home Visit")}
+            <Home size={16} /> {loading ? t("common.sending", "Sending...") : t("citizen.request_home_visit", "Request Home Visit")}
           </button>
         </div>
       </div>
@@ -123,6 +126,12 @@ export const AshaScreen: React.FC<AshaScreenProps> = ({ onBack }) => {
       {requested && (
         <div style={{ backgroundColor: "#F0FDF4", borderRadius: 16, padding: 14, border: "1px solid #86EFAC", color: "#166534", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
           <CheckCircle2 size={18} /> {t("messages.SUCCESS", "Home Visit Request Sent to Sita Patel!")}
+        </div>
+      )}
+
+      {errorMsg && (
+        <div style={{ backgroundColor: "#FEF2F2", borderRadius: 16, padding: 14, border: "1px solid #FCA5A5", color: "#991B1B", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+          ⚠️ {errorMsg}
         </div>
       )}
     </div>

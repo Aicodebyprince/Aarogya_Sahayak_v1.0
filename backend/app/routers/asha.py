@@ -33,39 +33,51 @@ def get_asha_dashboard(
     current_user: User = Depends(require_staff)
 ):
     now = datetime.now(timezone.utc)
-    total_assigned = db.query(Case).filter(Case.assigned_asha_id == current_user.id).count()
-    urgent_count = db.query(Case).filter(Case.assigned_asha_id == current_user.id, Case.priority == CasePriorityEnum.URGENT).count()
-    urgent_unack = db.query(Case).filter(
+    from sqlalchemy import or_
+
+    worker = getattr(current_user, 'worker_profile', None)
+    assigned_village = getattr(worker, 'village_name', None) or (worker.village_ids[0] if worker and worker.village_ids else None)
+
+    case_filter = or_(
         Case.assigned_asha_id == current_user.id,
+        Case.assigned_asha_id.is_(None)
+    )
+
+    total_assigned = db.query(Case).filter(case_filter).count()
+    urgent_count = db.query(Case).filter(case_filter, Case.priority == CasePriorityEnum.URGENT).count()
+    urgent_unack = db.query(Case).filter(
+        case_filter,
         Case.priority == CasePriorityEnum.URGENT,
-        Case.status == CaseStatusEnum.NEW
+        Case.status.in_([CaseStatusEnum.NEW, CaseStatusEnum.ASHA_ASSIGNED])
     ).count()
 
     pending_visits = db.query(Case).filter(
-        Case.assigned_asha_id == current_user.id,
-        Case.status.in_([CaseStatusEnum.NEW, CaseStatusEnum.ASHA_ACKNOWLEDGED, CaseStatusEnum.CITIZEN_CONTACTED])
+        case_filter,
+        Case.status.in_([
+            CaseStatusEnum.NEW,
+            CaseStatusEnum.ASHA_ASSIGNED,
+            CaseStatusEnum.ASHA_ACKNOWLEDGED,
+            CaseStatusEnum.CITIZEN_CONTACTED,
+            CaseStatusEnum.VISIT_REQUIRED
+        ])
     ).count()
 
     active_followups = db.query(FollowUp).filter(
-        FollowUp.assigned_user_id == current_user.id,
+        or_(FollowUp.assigned_user_id == current_user.id, FollowUp.assigned_user_id.is_(None)),
         FollowUp.status == "PENDING"
     ).count()
 
     overdue_followups = db.query(FollowUp).filter(
-        FollowUp.assigned_user_id == current_user.id,
+        or_(FollowUp.assigned_user_id == current_user.id, FollowUp.assigned_user_id.is_(None)),
         FollowUp.status == "PENDING",
         FollowUp.due_at < now
     ).count()
 
     doctor_instructions = db.query(FollowUp).filter(
-        FollowUp.assigned_user_id == current_user.id,
+        or_(FollowUp.assigned_user_id == current_user.id, FollowUp.assigned_user_id.is_(None)),
         FollowUp.source == "DOCTOR",
         FollowUp.status == "PENDING"
     ).count()
-
-    # Strict ASHA scoping: count only citizens assigned to this ASHA or residing in their assigned village
-    worker = getattr(current_user, 'worker_profile', None)
-    assigned_village = getattr(worker, 'village_name', None) or (worker.village_ids[0] if worker and worker.village_ids else None)
 
     if assigned_village:
         total_citizens = db.query(CitizenProfile).filter(
@@ -73,11 +85,11 @@ def get_asha_dashboard(
         ).count()
     else:
         total_citizens = db.query(CitizenProfile).filter(
-            CitizenProfile.assigned_asha_id == current_user.id
+            (CitizenProfile.assigned_asha_id == current_user.id) | (CitizenProfile.assigned_asha_id.is_(None))
         ).count()
 
     cases = db.query(Case).filter(
-        Case.assigned_asha_id == current_user.id
+        case_filter
     ).order_by(Case.created_at.desc()).limit(20).all()
 
     tasks = [
@@ -132,7 +144,13 @@ def get_asha_tasks(
 ):
     query = db.query(Case)
     if current_user.role == UserRoleEnum.ASHA_WORKER:
-        query = query.filter(Case.assigned_asha_id == current_user.id)
+        from sqlalchemy import or_
+        query = query.filter(
+            or_(
+                Case.assigned_asha_id == current_user.id,
+                Case.assigned_asha_id.is_(None)
+            )
+        )
     if priority:
         query = query.filter(Case.priority == priority)
     if status_filter:
@@ -2536,7 +2554,7 @@ def get_asha_citizen_requests(
             or_(
                 ServiceRequest.assigned_user_id == current_user.id,
                 ServiceRequest.assigned_user_id.is_(None),
-                ServiceRequest.status.in_(["ASSIGNMENT_PENDING", "SUBMITTED"])
+                ServiceRequest.status.in_(["ASSIGNMENT_PENDING", "SUBMITTED", "ASHA_ASSIGNED"])
             )
         )
 

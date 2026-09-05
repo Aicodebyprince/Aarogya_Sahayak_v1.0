@@ -81,12 +81,13 @@ class TavilyVerificationService:
                     "url": candidate_url
                 }
 
-            # Use basic search with official government filtering
-            search_query = f"{query} site:gov.in OR site:nic.in"
+            # Use Tavily native include_domains for strict official government domain allowlist
+            domains_to_include = ["gov.in", "nic.in", "who.int", "mohfw.gov.in", "pmjay.gov.in"]
             response = self._client.search(
-                query=search_query,
+                query=query,
+                include_domains=domains_to_include,
                 search_depth="basic",
-                max_results=3
+                max_results=5
             )
             results = response.get("results", [])
             for r in results:
@@ -97,7 +98,8 @@ class TavilyVerificationService:
                         "status": "LIVE_VERIFIED",
                         "domain": urlparse(url).hostname,
                         "title": r.get("title", "Official Guideline Update"),
-                        "url": url
+                        "url": url,
+                        "content": r.get("content", "")[:300] if r.get("content") else None
                     }
             return {
                 "verified": False,

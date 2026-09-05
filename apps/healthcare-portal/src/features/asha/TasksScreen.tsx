@@ -94,7 +94,7 @@ export function AshaTasksScreen() {
       if (filter === "URGENT" && t.priority !== "URGENT") return false;
       if (filter === "HIGH" && t.priority !== "HIGH") return false;
       if (filter === "ROUTINE" && t.priority !== "ROUTINE") return false;
-      if (filter === "NEW" && t.status !== "NEW" && t.status !== "SUBMITTED" && t.status !== "ASSIGNMENT_PENDING") return false;
+      if (filter === "NEW" && t.status !== "NEW" && t.status !== "SUBMITTED" && t.status !== "ASSIGNMENT_PENDING" && t.status !== "ASHA_ASSIGNED") return false;
       if (filter === "ASHA_ACKNOWLEDGED" && t.status !== "ASHA_ACKNOWLEDGED") return false;
       if (filter === "CITIZEN_CONTACTED" && t.status !== "CITIZEN_CONTACTED") return false;
       if (
